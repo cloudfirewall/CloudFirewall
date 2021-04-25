@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.cloudfirewall.agent";
+option java_outer_classname = "AgentProto";
+option objc_class_prefix = "CFA";
+
+package cloudfirewall;
+
+service Agent {
+  // send a heartbeat
+  rpc Heartbeat(HeartbeatRequest) returns (ServerResponseAck) {}
+
+  // Send response to command
+  rpc SendResponse(CommandResponse) returns (ServerResponseAck) {}
+}
+
+message HeartbeatRequest {
+  string version = 1;
+  string request_id = 2;
+  string node_id = 3;
+  string node_name = 4;
+  int64 timestamp = 5;
+}
+
+message ServerResponseAck {
+  string request_id = 1;
+  string command_uuid = 2;
+  repeated Command commands = 3;
+}
+
+enum CommandType {
+  FIREWALL = 0;
+  SHELL_SUDO = 1;
+  SHELL_NON_SUDO = 2;
+}
+
+message Command {
+  CommandType type = 1;
+  repeated string instructions = 2;
+}
+
+message CommandResponse {
+  string command_uuid = 1;
+  repeated string instruction_outputs = 2;
+}

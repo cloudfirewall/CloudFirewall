@@ -1,0 +1,37 @@
+# Python
+*.pyc
+*.pyo
+
+# Apple
+.DS_Store
+
+.env
+*.autosave
+*.stats
+.*project
+local.properties
+*.bak
+*~
+/*.log
+/.coverage
+/.dir-locals.el
+/.gdb_history
+**.idea/
+certs/**
+__pycache__
+
+# Documentation
+docs/_build/
+
+# PyInstaller
+build/cloudfirewall
+dist/
+
+# Annotation files
+annotations.txt
+
+# Tests output directory
+temp
+
+#venv
+venv/

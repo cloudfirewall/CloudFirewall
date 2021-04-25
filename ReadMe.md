@@ -34,23 +34,37 @@ of the individual connected servers which is presented in a web dashboard.
 This software is under development and is not ready for use.
 
 To run a development version:
-1. The communication between the GPRC server and the agents is done via GRPC
+1. Install the requirements.
+```shell
+pip3 install -r requirements.txt
+```   
+2. The communication between the GPRC server and the agents is done via GRPC
 channel secured with certificates. So, first the certificate needs to be generated.
+This step assumes that you have OpenSSL installed.   
 ```shell
 scripts/gen-ca-cert.sh
 scripts/gen-server-cert.sh
 scripts/gen-agent-cert.sh
 ```
-2. All GPRC communication is defined in `.proto` files inside `proto` directory.
+
+3. All GPRC communication is defined in `.proto` files inside `proto` directory.
 The wrapper for these proto files needs to be generated.
 ```shell
 scripts/build-proto.sh
 ```
-3. Running the firewall server
+
+4. Create `.env` file by copying `.env_example`. Make sure to make 
+   appropriate changes in the file to suit your needs.
+```shell
+cp .env_example .env
+```   
+   
+5. Run the firewall server
 ```shell
 python3 cloudfirewall/server/grpc_server.py
 ```
-4. Running the agent
+
+6. Run the agent
 ```shell
 python3 cloudfirewall/agent/grpc_client.py
 ```

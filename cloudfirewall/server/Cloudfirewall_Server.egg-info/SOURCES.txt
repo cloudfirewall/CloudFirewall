@@ -1,0 +1,14 @@
+CHANGELOG.txt
+LICENSES.txt
+MANIFEST.in
+README.txt
+__init__.py
+grpc_server.py
+server.py
+setup.py
+Cloudfirewall_Server.egg-info/PKG-INFO
+Cloudfirewall_Server.egg-info/SOURCES.txt
+Cloudfirewall_Server.egg-info/dependency_links.txt
+Cloudfirewall_Server.egg-info/top_level.txt
+servicer/__init__.py
+servicer/agent_servicer.py

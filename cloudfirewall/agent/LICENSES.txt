@@ -10,6 +10,7 @@
 
   0. Definitions.
   
+
   “This License” refers to Server Side Public License.
 
   “Copyright” also means copyright-like laws that apply to other kinds of

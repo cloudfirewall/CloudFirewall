@@ -8,7 +8,7 @@
 
                        TERMS AND CONDITIONS
 
-  0. Definitions.
+  0. Definitions. 
   
   “This License” refers to Server Side Public License.
 

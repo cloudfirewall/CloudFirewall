@@ -2,7 +2,7 @@ from setuptools import setup,find_packages
 
 setup(
      name='CloudFirewall',  
-     version='0.0.1',
+     version='0.1',
      author="Cloud FireWall",
      author_email="info@cloudfirewall.io",
      description="CloudFirewall-Agent packages",
@@ -13,5 +13,6 @@ setup(
          "Programming Language :: Python :: 3",
          "License :: Free To Use But Restricted",
          "Operating System :: OS Independent",
+         
      ],
  )

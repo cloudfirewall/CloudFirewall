@@ -2,20 +2,28 @@ Metadata-Version: 2.1
 Name: Cloudfirewall-Server
 Version: 0.0.1
 Summary: CloudFirewall-Server packages
-Home-page: UNKNOWN
-Author: Gagan Bikram Shah  
-Author-email: gaganbikram.gbs@gmail.com
+Home-page: https://github.com/cloudfirewall/CloudFirewall
+Author: Cloud FireWall
+Author-email: info@cloudfirewall.io
 License: UNKNOWN
-Description: This is CloudFirewall-Server
+Description: # Cloud Firewall
+        ==================
         
-        Change Log
-        ==============
+        Cloud Firewall provides firewall for distributed servers across 
+        different cloud providers. While each of the cloud providers have 
+        their own firewall solutions, it can be difficult to maintain consistency
+        across them. Cloud firewall provides a single dashboard to manage the 
+        firewall rules across all cloud providers.
         
-        0.0.1(10/05/2021)
+        # ChangeLog
+        ===================
+        
+        All notable changes to this project will be documented in this file.
+        
+        0.0.1(11/05/2021)
         -------------------
         -First Release
-        
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
-Classifier: License :: OSI Approved :: MIT License
+Classifier: License :: Free To Use But Restricted
 Classifier: Operating System :: OS Independent

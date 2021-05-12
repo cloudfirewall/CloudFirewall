@@ -7,7 +7,7 @@
   license document, but changing it is not allowed.
 
                        TERMS AND CONDITIONS
-
+                       
   0. Definitions.
   
   “This License” refers to Server Side Public License.

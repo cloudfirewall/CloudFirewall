@@ -1,10 +1,6 @@
-CHANGELOG.txt
 LICENSES.txt
 MANIFEST.in
 README.txt
-__init__.py
-agent.py
-grpc_client.py
 setup.py
 Cloudfirewall_agent.egg-info/PKG-INFO
 Cloudfirewall_agent.egg-info/SOURCES.txt

@@ -13,5 +13,6 @@ setup(
          "Programming Language :: Python :: 3",
          "License :: Free To Use But Restricted",
          "Operating System :: OS Independent",
+         
      ],
  )

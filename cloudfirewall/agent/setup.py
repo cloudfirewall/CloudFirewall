@@ -3,15 +3,15 @@ from setuptools import setup,find_packages
 setup(
      name='Cloudfirewall-agent',  
      version='0.0.1',
-     author="Gagan Bikram Shah  ",
-     author_email="gaganbikram.gbs@gmail.com",
+     author="Cloud FireWall",
+     author_email="info@cloudfirewall.io",
      description="CloudFirewall-Agent packages",
      long_description=open('README.txt').read() + '\n\n' + open('CHANGELOG.txt').read(),
-     url="",
+     url="https://github.com/cloudfirewall/CloudFirewall",
      packages=find_packages(),
      classifiers=[
          "Programming Language :: Python :: 3",
-         "License :: OSI Approved :: MIT License",
+         "License :: Free To Use But Restricted",
          "Operating System :: OS Independent",
      ],
  )

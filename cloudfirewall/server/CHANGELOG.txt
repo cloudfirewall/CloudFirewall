@@ -1,6 +1,8 @@
-Change Log
-==============
+# Changelog
+===================
 
-0.0.1(10/05/2021)
+All notable changes to this project will be documented in this file.
+
+0.0.1(11/05/2021)
 -------------------
 -First Release

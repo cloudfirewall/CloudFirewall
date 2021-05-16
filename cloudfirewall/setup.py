@@ -1,8 +1,8 @@
 from setuptools import setup,find_packages
 
 #setup.py files
-long_description=open('README.txt').read() 
-long_description.close()
+long_description=open('README.txt','r').close() 
+
 
 setup(
      name='CloudFirewall',  

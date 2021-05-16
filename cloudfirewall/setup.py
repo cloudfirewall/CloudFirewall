@@ -8,7 +8,7 @@ setup(
      author="Cloud FireWall",
      author_email="info@cloudfirewall.io",
      description="CloudFirewall-Agent packages",
-     long_description=open('README.txt','r').close() + '\n' + open('CHANGELOG.txt','r').close(),
+     long_description=open('README.txt','r').close() + '\n\n' + open('CHANGELOG.txt','r').close(),
      url="https://github.com/cloudfirewall/CloudFirewall",
      packages=find_packages(),
      classifiers=[

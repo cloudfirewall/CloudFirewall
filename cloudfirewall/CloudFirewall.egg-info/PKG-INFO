@@ -1,0 +1,34 @@
+Metadata-Version: 2.1
+Name: CloudFirewall
+Version: 0.1
+Summary: CloudFirewall-Agent packages
+Home-page: https://github.com/cloudfirewall/CloudFirewall
+Author: Cloud FireWall
+Author-email: info@cloudfirewall.io
+License: UNKNOWN
+Description: # Cloud Firewall
+        =================
+        
+        Cloud Firewall provides firewall for distributed servers across 
+        different cloud providers. While each of the cloud providers have 
+        their own firewall solutions, it can be difficult to maintain consistency
+        across them. Cloud firewall provides a single dashboard to manage the 
+        firewall rules across all cloud providers.
+        
+        Cloud firewall does not depend on the firewall service provided by the 
+        cloud providers, instead the firewall rules are applied at the individual 
+        server level using `nftables` package. In that sense, cloud firewall works
+        independently of the cloud providers.
+        
+        # ChangeLog
+        ===================
+        
+        All notable changes to this project will be documented in this file.
+        
+        0.0.1(11/05/2021)
+        --------------------
+        -First Release
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: Free To Use But Restricted
+Classifier: Operating System :: OS Independent

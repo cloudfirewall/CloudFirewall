@@ -1,4 +1,6 @@
-from setuptools import setup, find_packages
+from setuptools import setup,find_packages
+
+#setup.py files
 
 setup(
      name='CloudFirewall',  
@@ -13,5 +15,6 @@ setup(
          "Programming Language :: Python :: 3",
          "License :: Free To Use But Restricted",
          "Operating System :: OS Independent",
+         
      ],
-)
+ )

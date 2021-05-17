@@ -1,7 +1,7 @@
 from setuptools import setup,find_packages
 
 #setup.py file
-long_description=open('README.txt','r').close() + '\n\n' + open('CHANGELOG.txt','r').close()
+
 
 setup(
      name='CloudFirewall',
@@ -9,7 +9,7 @@ setup(
      author="Cloud FireWall",
      author_email="info@cloudfirewall.io",
      description="CloudFirewall-Agent packages",
-     long_description=long_description,
+     long_description=open('README.txt','r').close() + '\n\n' + open('CHANGELOG.txt','r').close(),
      url="https://github.com/cloudfirewall/CloudFirewall",
      packages=find_packages(),
      classifiers=[

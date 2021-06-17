@@ -1,11 +1,10 @@
 import asyncio
 import logging
 import os
-import uuid
 
 import grpc
 
-from cloudfirewall.agent.service.agent_service import AgentService
+from cloudfirewall.agent.service.heartbeat_service import HeartbeatService
 from cloudfirewall.common.path_utils import resolve_path
 
 SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
@@ -58,8 +57,8 @@ class CloudAgent:
 
     def load_services(self):
         self.logger.info("Loading GPRC services")
-        agent_service = AgentService(self, self.channel)
-        self.services.append(agent_service)
+        heartbeat_service = HeartbeatService(self, self.channel)
+        self.services.append(heartbeat_service)
 
     def wait_for_termination(self):
         loop = asyncio.get_event_loop()

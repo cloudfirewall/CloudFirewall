@@ -13,11 +13,11 @@ from cloudfirewall.version import VERSION
 HEARTBEAT_INTERVAL = 5  # Seconds
 
 
-class AgentService(TaskManager):
+class HeartbeatService(TaskManager):
 
     def __init__(self, agent, channel):
-        self.logger = logging.getLogger(AgentService.__name__)
-        super(AgentService, self).__init__()
+        self.logger = logging.getLogger(HeartbeatService.__name__)
+        super(HeartbeatService, self).__init__()
 
         self.agent = agent
         self.channel = channel

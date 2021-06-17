@@ -3,46 +3,36 @@ import os
 import time
 import uuid
 
-import grpc
-
-from cloudfirewall.common.taskmanager import TaskManager
-from cloudfirewall.grpc import agent_pb2_grpc
-from cloudfirewall.grpc.agent_pb2 import HeartbeatRequest
+from cloudfirewall.agent.service.agent_service import AgentService
+from cloudfirewall.grpc import heartbeat_pb2_grpc
+from cloudfirewall.grpc.heartbeat_pb2 import PingRequest
 from cloudfirewall.version import VERSION
 
 HEARTBEAT_INTERVAL = 5  # Seconds
 
 
-class HeartbeatService(TaskManager):
+class HeartbeatService(AgentService):
 
     def __init__(self, agent, channel):
         self.logger = logging.getLogger(HeartbeatService.__name__)
-        super(HeartbeatService, self).__init__()
-
-        self.agent = agent
-        self.channel = channel
+        super(HeartbeatService, self).__init__(agent, channel)
 
         # Setup the stub for GRPC service
-        self.stub = agent_pb2_grpc.AgentStub(self.channel)
+        self.stub = heartbeat_pb2_grpc.HeartbeatStub(self.channel)
 
         # Schedule all periodic tasks
-        self.register_task("send_heartbeat", self.send_heartbeat, interval=HEARTBEAT_INTERVAL)
+        self.register_task("send_ping", self.send_ping, interval=HEARTBEAT_INTERVAL)
 
-    def send_heartbeat(self):
-        uname = os.uname()
-        heartbeat_request = HeartbeatRequest(version=VERSION,
-                                             request_id=str(uuid.uuid4()),
-                                             node_id=self.agent.agent_uuid,
-                                             node_name=uname.nodename,
-                                             timestamp=int(time.time()))
+    def send_ping(self):
+        ping_time = time.time()
+        request_id = str(uuid.uuid4())
+        ping_request = PingRequest(version=VERSION,
+                                   request_id=request_id,
+                                   node_id=self.agent.agent_uuid,
+                                   node_name=os.uname().nodename,
+                                   timestamp=ping_time)
 
-        try:
-            response = self.stub.Heartbeat(heartbeat_request)
-            self.logger.info(f"Heartbeat response: [request_id: %s]", response.request_id)
-        except grpc.RpcError as rpc_error:
-            if rpc_error.code() == grpc.StatusCode.CANCELLED:
-                self.logger.error("GRPC service cancelled")
-            elif rpc_error.code() == grpc.StatusCode.UNAVAILABLE:
-                self.logger.error("GRPC service unavailable")
-            else:
-                self.logger.error(f"Unknown RPC error: code={rpc_error.code()}, message={rpc_error.details()}")
+        ping_response = self.get_response(self.stub.Ping, ping_request)
+        if ping_response:
+            response_time = (time.time() - ping_time) * 1000
+            self.logger.info(f"Heartbeat ping: {ping_response.request_id}, response: {response_time} ms")

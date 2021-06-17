@@ -3,7 +3,7 @@
 # directory. The correct path for the certificates
 # is <project_root>/certs
 
-AGENT_CN=grpc.cloudfirewall.io
+AGENT_CN=localhost
 
 openssl req -nodes -newkey rsa:4096 \
     -keyout certs/cloud-agent.key \

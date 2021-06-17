@@ -3,7 +3,7 @@
 # directory. The correct path for the certificates
 # is <project_root>/certs
 
-SERVER_CN=grpc.cloudfirewall.io
+SERVER_CN=localhost
 
 openssl req -nodes -newkey rsa:4096 \
     -keyout certs/cloud-server.key \

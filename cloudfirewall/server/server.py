@@ -6,6 +6,7 @@ from signal import signal, SIGTERM
 import grpc
 
 from cloudfirewall.common.path_utils import resolve_path
+from cloudfirewall.server.servicer.firewall_servicer import FirewallServicer
 from cloudfirewall.server.servicer.heartbeat_servicer import HeartbeatServicer
 
 SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
@@ -73,6 +74,10 @@ class CloudServer:
         self.server.wait_for_termination()
 
     def load_servicers(self):
-        self.logger.info("Loading GRPC Service servicers")
+        self.logger.info("Loading Heartbeat servicers")
         heartbeat_servicer = HeartbeatServicer(self.server)
         self.servicers.append(heartbeat_servicer)
+
+        self.logger.info("Loading Firewall servicers")
+        firewall_servicer = FirewallServicer(self.server)
+        self.servicers.append(firewall_servicer)

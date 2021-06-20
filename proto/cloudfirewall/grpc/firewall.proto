@@ -1,0 +1,54 @@
+syntax = "proto3";
+package cloudfirewall;
+
+service Firewall {
+  rpc FetchLatestRules(FirewallFetchRequest) returns (FirewallFetchResponse) {}
+  rpc SendFirewallStatus(FirewallStatus) returns (FirewallStatusAck) {}
+}
+
+message FirewallFetchRequest {
+  string version = 1;
+  string request_id = 2;
+  string node_id = 3;
+}
+
+message FirewallFetchResponse {
+  Policy inbound = 1;
+  Policy outbound = 2;
+  repeated FirewallRule rules = 3;
+}
+
+message FirewallStatus {
+  Policy inbound = 1;
+  Policy outbound = 2;
+  repeated FirewallRule rules = 3;
+}
+
+message FirewallStatusAck {
+  bool success = 1;
+  string error = 2;
+}
+
+message FirewallRule {
+  Chain chain = 1;
+  Protocol protocol = 2;
+  string ipRange = 3;
+  int32 port = 4;
+  Policy policy = 5;
+}
+
+enum Policy {
+  DROP = 0;
+  ACCEPT = 1;
+}
+
+enum Chain {
+  INPUT = 0;
+  OUTPUT = 1;
+}
+
+enum Protocol {
+  TCP = 0;
+  UDP = 1;
+  ICMP = 2;
+}

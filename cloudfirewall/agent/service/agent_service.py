@@ -16,9 +16,7 @@ class AgentService(TaskManager):
 
     def get_response(self, stub, request):
         try:
-            response = stub(request)
-            self.logger.debug(f"{response.__class__.__name__} response: [request_id: %s]", response.request_id)
-            return response
+            return stub(request)
         except grpc.RpcError as rpc_error:
             if rpc_error.code() == grpc.StatusCode.CANCELLED:
                 self.logger.error("GRPC service cancelled")

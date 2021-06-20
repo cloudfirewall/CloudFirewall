@@ -19,6 +19,6 @@ if __name__ == '__main__':
 
     agent = CloudAgent(AGENT_UUID, SERVER_HOST, SERVER_PORT)
     agent.connect()
-    agent.load_services()
+    agent.load_plugins()
     agent.wait_for_termination()
 

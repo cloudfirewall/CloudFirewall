@@ -4,8 +4,7 @@ import os
 
 import grpc
 
-from cloudfirewall.agent.service.firewall_service import FirewallService
-from cloudfirewall.agent.service.heartbeat_service import HeartbeatService
+from cloudfirewall.agent.plugins import agent_plugin_registry
 from cloudfirewall.common.path_utils import resolve_path
 
 SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
@@ -29,6 +28,7 @@ class CloudAgent:
         self.channel = None
         self.credentials = None
         self.services = []
+        self.plugins = []
 
     def load_credentials(self):
         agent_key_path = resolve_path(AGENT_KEY_PATH)
@@ -56,17 +56,19 @@ class CloudAgent:
         self.logger.info("Disconnecting GPRC server channel")
         self.channel.close()
 
-    def load_services(self):
-        self.logger.info("Loading Heartbeat service")
-        heartbeat_service = HeartbeatService(self, self.channel)
-        self.services.append(heartbeat_service)
-
-        self.logger.info("Loading Firewall service")
-        firewall_service = FirewallService(self, self.channel)
-        self.services.append(firewall_service)
-
     def wait_for_termination(self):
         loop = asyncio.get_event_loop()
 
         self.logger.info("Waiting for termination")
         loop.run_forever()
+
+    def load_plugins(self):
+        for plugin_class in agent_plugin_registry:
+            self.logger.info(f"Loading Agent Plugin: {plugin_class.__name__}")
+            plugin = plugin_class(self, self.channel)
+            self.plugins.append(plugin)
+
+            # Load GRPC service
+            service = plugin.get_service()
+            if service:
+                self.services.append(service)

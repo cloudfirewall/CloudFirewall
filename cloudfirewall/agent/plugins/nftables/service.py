@@ -2,7 +2,7 @@ import logging
 import time
 import uuid
 
-from cloudfirewall.agent.service.agent_service import AgentService
+from cloudfirewall.agent.plugins.common.agent_service import AgentService
 from cloudfirewall.grpc import firewall_pb2_grpc
 from cloudfirewall.grpc.firewall_pb2 import FirewallFetchRequest
 

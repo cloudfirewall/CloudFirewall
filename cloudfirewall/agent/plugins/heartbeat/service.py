@@ -3,7 +3,7 @@ import os
 import time
 import uuid
 
-from cloudfirewall.agent.service.agent_service import AgentService
+from cloudfirewall.agent.plugins.common.agent_service import AgentService
 from cloudfirewall.grpc import heartbeat_pb2_grpc
 from cloudfirewall.grpc.heartbeat_pb2 import PingRequest
 from cloudfirewall.version import VERSION

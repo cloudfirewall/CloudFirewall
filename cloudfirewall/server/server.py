@@ -7,7 +7,7 @@ import grpc
 from fastapi import FastAPI
 
 from cloudfirewall.common.path_utils import resolve_path
-from cloudfirewall.server.plugins import plugin_registry
+from cloudfirewall.server.plugins import server_plugin_registry
 
 SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
 SERVER_PORT = int(os.environ.get('SERVER_PORT', '50051'))
@@ -78,7 +78,7 @@ class CloudServer(FastAPI):
         self.server.wait_for_termination()
 
     def load_plugins(self):
-        for plugin_class in plugin_registry:
+        for plugin_class in server_plugin_registry:
             self.logger.info(f"Loading Plugin: {plugin_class.__name__}")
             plugin = plugin_class(self.server)
             self.plugins.append(plugin)

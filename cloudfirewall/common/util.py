@@ -36,3 +36,7 @@ def coroutine(func):
     async def call_async(*args, **kwargs):
         return func(*args, **kwargs)
     return call_async
+
+
+def env_to_list(env_value):
+    return env_value.replace(' ', '').split(',')

@@ -35,3 +35,6 @@ temp
 
 #venv
 venv/
+
+# Database
+*.db

@@ -4,6 +4,7 @@ from concurrent import futures
 from signal import signal, SIGTERM
 
 import grpc
+from fastapi import FastAPI
 
 from cloudfirewall.common.path_utils import resolve_path
 from cloudfirewall.server.servicer.firewall_servicer import FirewallServicer
@@ -19,9 +20,10 @@ CA_CERT_PATH = os.environ.get('CA_CERT_PATH', 'certs/cloud-ca.pem')
 MAX_WORKERS = 10
 
 
-class CloudServer:
+class CloudServer(FastAPI):
 
     def __init__(self, server_host, server_port):
+        super(CloudServer, self).__init__()
         self.logger = logging.getLogger(CloudServer.__name__)
 
         self.server_host = server_host
@@ -55,7 +57,7 @@ class CloudServer:
         self.logger.info("Initializing secure GRPC server %s", server_address)
         self.server.add_secure_port(f'{self.server_host}:{self.server_port}', self.credentials)
 
-    def start(self):
+    def start_grpc_server(self):
         self.logger.info("Starting GPRC server")
         self.server.start()
 
@@ -65,7 +67,7 @@ class CloudServer:
 
         signal(SIGTERM, handle_sigterm)
 
-    def stop(self):
+    def stop_grpc_server(self):
         self.logger.info("Stopping GPRC server")
         self.server.stop()
 

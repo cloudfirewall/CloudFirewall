@@ -1,8 +1,8 @@
-from cloudfirewall.server.plugins import Plugin
+from cloudfirewall.server.plugins import ServerPlugin
 from cloudfirewall.server.plugins.nftables.servicer import FirewallServicer
 
 
-class NFTablesPlugin(Plugin):
+class NFTablesPlugin(ServerPlugin):
     NAME = 'nftables'
 
     def __init__(self, server):

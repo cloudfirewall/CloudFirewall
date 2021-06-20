@@ -25,7 +25,7 @@ def register_agent_plugins():
     agent_plugin_registry_initialized = True
 
 
-# Plugin registry registers all the plugins. To register the plugins, call
+# ServerPlugin registry registers all the plugins. To register the plugins, call
 # register_plugins() function defined above.
 agent_plugin_registry = set()
 agent_plugin_registry_initialized = False

@@ -1,9 +1,9 @@
-from cloudfirewall.server.plugins import Plugin
+from cloudfirewall.server.plugins import ServerPlugin
 from cloudfirewall.server.plugins.heartbeat.servicer import HeartbeatServicer
 from cloudfirewall.server.plugins.heartbeat import api as heartbeat_api
 
 
-class HeartbeatPlugin(Plugin):
+class HeartbeatPlugin(ServerPlugin):
     NAME = 'heartbeat'
 
     def __init__(self, server):

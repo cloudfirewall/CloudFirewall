@@ -1,11 +1,9 @@
-import ast
-import importlib
 import os
 
 from cloudfirewall.common.plugin_helper import register_plugins
 
 
-class Plugin:
+class ServerPlugin:
 
     def get_name(self):
         raise NotImplementedError("Name is not implemented")
@@ -28,7 +26,7 @@ def register_server_plugins():
     server_plugin_registry_initialized = True
 
 
-# Plugin registry registers all the plugins. To register the plugins, call
+# ServerPlugin registry registers all the plugins. To register the plugins, call
 # register_server_plugins() function defined above.
 server_plugin_registry = set()
 server_plugin_registry_initialized = False

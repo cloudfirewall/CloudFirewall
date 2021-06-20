@@ -7,8 +7,7 @@ import grpc
 from fastapi import FastAPI
 
 from cloudfirewall.common.path_utils import resolve_path
-from cloudfirewall.server.servicer.firewall_servicer import FirewallServicer
-from cloudfirewall.server.servicer.heartbeat_servicer import HeartbeatServicer
+from cloudfirewall.server.plugins import plugin_registry
 
 SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
 SERVER_PORT = int(os.environ.get('SERVER_PORT', '50051'))
@@ -32,6 +31,9 @@ class CloudServer(FastAPI):
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=MAX_WORKERS))
         self.credentials = None
         self.servicers = []
+
+        self.plugins = []
+        self.load_plugins()
 
     def load_credentials(self):
         server_key_path = resolve_path(SERVER_KEY_PATH)
@@ -75,11 +77,18 @@ class CloudServer(FastAPI):
         self.logger.info("Waiting for termination")
         self.server.wait_for_termination()
 
-    def load_servicers(self):
-        self.logger.info("Loading Heartbeat servicers")
-        heartbeat_servicer = HeartbeatServicer(self.server)
-        self.servicers.append(heartbeat_servicer)
+    def load_plugins(self):
+        for plugin_class in plugin_registry:
+            self.logger.info(f"Loading Plugin: {plugin_class.__name__}")
+            plugin = plugin_class(self.server)
+            self.plugins.append(plugin)
 
-        self.logger.info("Loading Firewall servicers")
-        firewall_servicer = FirewallServicer(self.server)
-        self.servicers.append(firewall_servicer)
+            # Load GRPC servicer
+            servicer = plugin.get_servicer()
+            if servicer:
+                self.servicers.append(plugin.get_servicer())
+
+            # Load the API router
+            api_router = plugin.get_api_router()
+            if api_router:
+                self.include_router(api_router)

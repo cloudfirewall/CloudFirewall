@@ -14,7 +14,6 @@ from starlette.responses import RedirectResponse
 from cloudfirewall.common.log_util import setup_logging
 from cloudfirewall.common.util import env_to_list
 from cloudfirewall.db import db
-from cloudfirewall.server.api import health
 from cloudfirewall.server.server import CloudServer
 
 load_dotenv()
@@ -23,7 +22,6 @@ SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
 SERVER_PORT = int(os.environ.get('SERVER_PORT', '50051'))
 
 app = CloudServer(SERVER_HOST, SERVER_PORT)
-app.include_router(health.router)
 
 ALLOWED_ORIGINS = env_to_list(os.environ.get('ALLOWED_ORIGINS', '*'))
 ALLOWED_METHODS = env_to_list(os.environ.get('ALLOWED_METHODS', '*'))
@@ -77,7 +75,6 @@ app.openapi = custom_openapi
 @app.on_event("startup")
 async def startup():
     app.connect()
-    app.load_servicers()
     app.start_grpc_server()
 
 

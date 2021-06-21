@@ -1,19 +1,15 @@
-from typing import Optional
-
-from fastapi import APIRouter, HTTPException, Request, Depends
-from pony import orm
-from pony.orm import desc
+from fastapi import APIRouter
 
 router = APIRouter()
 
 
 @router.get(
-    "/health",
-    tags=["Health API"],
-    summary="Returns health of all servers"
+    "/ping",
+    tags=["Ping Status API"],
+    summary="Returns up status if the server is running"
 )
 async def get_healths():
-    with orm.db_session:
-        return {
-            "name": "hello"
-        }
+    return {
+        "name": "cloudfirewall",
+        "status": "up"
+    }

@@ -13,7 +13,7 @@ from starlette.responses import RedirectResponse
 
 from cloudfirewall.common.log_util import setup_logging
 from cloudfirewall.common.util import env_to_list
-from cloudfirewall.db import db
+from cloudfirewall.db import database
 from cloudfirewall.server.server import CloudServer
 
 load_dotenv()
@@ -38,8 +38,8 @@ app.add_middleware(
 
 def setup_database():
     time.sleep(random())  # to prevent all workers calling generate_mapping at the same time
-    db.bind('sqlite', os.environ.get('CF_SERVER_DB', 'cf_server.db'), create_db=True)
-    db.generate_mapping(create_tables=True)
+    database.bind('sqlite', os.environ.get('CF_SERVER_DB', 'cf_server.db'), create_db=True)
+    database.generate_mapping(create_tables=True)
     orm.sql_debug(False)
 
 
@@ -76,6 +76,7 @@ app.openapi = custom_openapi
 async def startup():
     app.connect()
     app.start_grpc_server()
+    database.generate_mapping(create_tables=True)
 
 
 @app.on_event("shutdown")

@@ -6,7 +6,6 @@ import uuid
 from cloudfirewall.agent.plugins.common.agent_service import AgentService
 from cloudfirewall.grpc import heartbeat_pb2_grpc
 from cloudfirewall.grpc.heartbeat_pb2 import PingRequest
-from cloudfirewall.version import VERSION
 
 HEARTBEAT_INTERVAL = 5  # Seconds
 
@@ -26,13 +25,12 @@ class HeartbeatService(AgentService):
     def send_ping(self):
         ping_time = time.time()
         request_id = str(uuid.uuid4())
-        ping_request = PingRequest(version=VERSION,
-                                   request_id=request_id,
-                                   node_id=self.agent.agent_uuid,
-                                   node_name=os.uname().nodename,
-                                   timestamp=ping_time)
+        ping_request = PingRequest(
+            node_id=self.agent.agent_uuid,
+            node_name=os.uname().nodename,
+        )
 
         ping_response = self.get_response(self.stub.Ping, ping_request)
         if ping_response:
             response_time = (time.time() - ping_time) * 1000
-            self.logger.info(f"Heartbeat ping: {ping_response.request_id}, response: {response_time} ms")
+            self.logger.info(f"Heartbeat ping response: {response_time} ms")

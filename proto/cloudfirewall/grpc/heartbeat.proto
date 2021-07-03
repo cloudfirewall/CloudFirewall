@@ -6,14 +6,10 @@ service Heartbeat {
 }
 
 message PingRequest {
-  string version = 1;
-  string request_id = 2;
-  string node_id = 3;
-  string node_name = 4;
-  double timestamp = 5;
+  string node_id = 1;
+  string node_name = 2;
 }
 
 message PingResponse {
-  string request_id = 1;
-  string extra_info = 2;
+  string extra_info = 1;
 }

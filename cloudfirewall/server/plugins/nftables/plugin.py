@@ -1,5 +1,6 @@
 from cloudfirewall.server.plugins import ServerPlugin
 from cloudfirewall.server.plugins.nftables.servicer import FirewallServicer
+from cloudfirewall.server.plugins.nftables import api as nft_api
 
 
 class NFTablesPlugin(ServerPlugin):
@@ -16,4 +17,4 @@ class NFTablesPlugin(ServerPlugin):
         return FirewallServicer(self.server)
 
     def get_api_router(self):
-        return None
+        return nft_api.router

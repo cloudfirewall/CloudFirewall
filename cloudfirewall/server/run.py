@@ -63,7 +63,7 @@ def custom_openapi():
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
-        "url": "https://www.tribler.org/img/tribler-logo.png"
+        "url": "https://github.com/cloudfirewall/CloudFirewall/blob/main/docs/images/cloudfirewall-logo.png"
     }
     app.openapi_schema = openapi_schema
     return app.openapi_schema

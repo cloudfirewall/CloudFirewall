@@ -4,8 +4,8 @@ from pony.orm import PrimaryKey
 from cloudfirewall.db import database
 
 
-class PingStatus(database.Entity):
-    _table_ = 'plugin_heartbeat_ping'
+class Node(database.Entity):
+    _table_ = 'plugin_nodes'
 
     id = PrimaryKey(int, auto=True)
     node_id = orm.Required(str)

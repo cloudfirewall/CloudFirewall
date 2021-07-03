@@ -1,21 +1,15 @@
-import logging
 import time
 
 from pony.orm import db_session, select
 
-from cloudfirewall.server.plugins.heartbeat.entities import PingStatus, PingHistory
+from cloudfirewall.server.plugins.common.db import BaseDBService
+from cloudfirewall.server.plugins.heartbeat.entities import Node, PingHistory
 
 
-class DatabaseService:
+class DatabaseService(BaseDBService):
 
     def __init__(self):
-        self.logger = logging.getLogger(__name__)
-
-    def _get_peer_ip(self, peer_address):
-        if peer_address.startswith("ipv4:"):
-            splits = peer_address.split(":")
-            return splits[1]
-        return "N/A"
+        super(DatabaseService, self).__init__()
 
     @db_session
     def save_ping_request(self, ping_request, context):
@@ -25,13 +19,13 @@ class DatabaseService:
 
     @db_session
     def update_ping_status(self, ping_request, node_ip):
-        ping_status = PingStatus.get(node_id=ping_request.node_id, node_ip=node_ip)
+        ping_status = Node.get(node_id=ping_request.node_id, node_ip=node_ip)
         if ping_status:
-            ping_status = PingStatus[ping_status.id]
+            ping_status = Node[ping_status.id]
             ping_status.node_name = ping_request.node_name
             ping_status.timestamp = int(time.time())
         else:
-            PingStatus(
+            Node(
                 node_id=ping_request.node_id,
                 node_name=ping_request.node_name,
                 node_ip=node_ip,
@@ -49,7 +43,7 @@ class DatabaseService:
 
     @db_session
     def get_nodes_status(self):
-        ping_statuses = select(p for p in PingStatus)[:]
+        ping_statuses = select(p for p in Node)[:]
         return ping_statuses
 
     @db_session

@@ -1,9 +1,4 @@
 import logging
-import time
-
-from pony.orm import db_session, select
-
-from cloudfirewall.server.plugins.heartbeat.entities import PingStatus, PingHistory
 
 
 class BaseDBService:

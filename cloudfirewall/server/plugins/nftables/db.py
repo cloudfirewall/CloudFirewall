@@ -1,8 +1,10 @@
-from pony.orm import db_session, select
+from pony.orm import db_session, select, ObjectNotFound
 
 from cloudfirewall.server.plugins.common.db import BaseDBService
+from cloudfirewall.server.plugins.common.exceptions import ServerError
+from cloudfirewall.server.plugins.heartbeat.entities import Node
 from cloudfirewall.server.plugins.nftables.dto import CreateFirewallRequest, FirewallRuleRequest
-from cloudfirewall.server.plugins.nftables.entities import SecurityGroup, SecurityGroupRule
+from cloudfirewall.server.plugins.nftables.entities import SecurityGroup, SecurityGroupRule, SecurityGroupUpdate
 
 
 class DatabaseService(BaseDBService):
@@ -21,7 +23,13 @@ class DatabaseService(BaseDBService):
 
     @db_session
     def get_firewall_group(self, group_id):
-        return SecurityGroup[group_id]
+        try:
+            return SecurityGroup[group_id]
+        except ObjectNotFound:
+            return None
+        except Exception as ex:
+            self.logger.exception(ex)
+            return None
 
     def update_firewall_group(self):
         pass
@@ -38,6 +46,7 @@ class DatabaseService(BaseDBService):
             SecurityGroupRule.create(group, rule)
         except Exception as ex:
             self.logger.exception(ex)
+            raise ServerError("Failed to add firewall rule to a group")
 
     @db_session
     def update_rule_in_group(self, rule_ro: SecurityGroupRule, rule_request: FirewallRuleRequest):
@@ -46,6 +55,7 @@ class DatabaseService(BaseDBService):
             rule_rw.update_rule(rule_request)
         except Exception as ex:
             self.logger.exception(ex)
+            raise ServerError("Failed to update rule in a group")
 
     @db_session
     def delete_rule_in_group(self, rule_ro: SecurityGroupRule):
@@ -54,3 +64,12 @@ class DatabaseService(BaseDBService):
             rule_rw.delete()
         except Exception as ex:
             self.logger.exception(ex)
+            raise ServerError("Failed to delete rule in group")
+
+    @db_session
+    def apply_firewall_group(self, group: SecurityGroup, node: Node):
+        try:
+            SecurityGroupUpdate.create(group, node)
+        except Exception as ex:
+            self.logger.exception(ex)
+            raise ServerError("Failed to apply firewall group to the node")

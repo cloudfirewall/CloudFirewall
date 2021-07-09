@@ -14,6 +14,8 @@ class HeartbeatServicer(heartbeat_pb2_grpc.HeartbeatServicer):
         heartbeat_pb2_grpc.add_HeartbeatServicer_to_server(self, server)
 
     def Ping(self, request, context):
-        self.logger.info("Heartbeat peer: %s", context.peer())
+        # self.logger.info("Heartbeat peer: %s", context.peer())
+        # self.logger.info("Heartbeat peer identities: %s", context.peer_identities())
+        # self.logger.info("Heartbeat peer auth context: %s", context.auth_context())
         self.db.save_ping_request(request, context)
         return PingResponse()

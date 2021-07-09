@@ -1,15 +1,26 @@
 import time
 
-from pony.orm import db_session, select
+from pony.orm import db_session, select, ObjectNotFound
 
 from cloudfirewall.server.plugins.common.db import BaseDBService
 from cloudfirewall.server.plugins.heartbeat.entities import Node, PingHistory
+from cloudfirewall.server.plugins.nftables.entities import SecurityGroup
 
 
 class DatabaseService(BaseDBService):
 
     def __init__(self):
         super(DatabaseService, self).__init__()
+
+    @db_session
+    def get_node_by_id(self, node_id):
+        try:
+            return Node.get(node_id=node_id)
+        except ObjectNotFound:
+            return None
+        except Exception as ex:
+            self.logger.exception(ex)
+            return None
 
     @db_session
     def save_ping_request(self, ping_request, context):
@@ -29,7 +40,8 @@ class DatabaseService(BaseDBService):
                 node_id=ping_request.node_id,
                 node_name=ping_request.node_name,
                 node_ip=node_ip,
-                timestamp=int(time.time())
+                timestamp=int(time.time()),
+                node_security_group=SecurityGroup.get_default()
             )
 
     @db_session

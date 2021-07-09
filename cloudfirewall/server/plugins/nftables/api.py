@@ -4,12 +4,15 @@ from fastapi import APIRouter, Depends
 from pony.orm import db_session
 
 from cloudfirewall.server.plugins.common.exceptions import BadRequest
+from cloudfirewall.server.plugins.heartbeat.entities import Node
 from cloudfirewall.server.plugins.nftables.db import DatabaseService
 from cloudfirewall.server.plugins.nftables.dto import CreateFirewallRequest, RulesetRequest, FirewallRuleRequest
 from cloudfirewall.server.plugins.nftables.entities import SecurityGroup, SecurityGroupRule
+from cloudfirewall.server.plugins.heartbeat.db import DatabaseService as NodeDatabaseService
 
 router = APIRouter()
 db_service = DatabaseService()
+node_db_service = NodeDatabaseService()
 logger = logging.getLogger(__name__)
 
 
@@ -25,6 +28,13 @@ async def get_firewall_rule_by_id(rule_id: int):
     if not rule:
         raise BadRequest(f"Firewall Rule[{rule_id}] does not exist")
     return rule
+
+
+async def get_node_by_id(node_id: str):
+    node = node_db_service.get_node_by_id(node_id)
+    if not node:
+        raise BadRequest(f"Node[{node_id}] does not exist")
+    return node
 
 
 @router.get(
@@ -69,9 +79,23 @@ async def create_firewall_group(create_request: CreateFirewallRequest):
 )
 async def add_firewall_rule(rule: FirewallRuleRequest,
                             firewall: SecurityGroup = Depends(get_firewall_group_by_id)):
-    logger.info(f"Received create firewall request: {rule}")
+    logger.info(f"Received create firewall request: {rule} to group: {firewall}")
     with db_session:
+        if firewall.locked:
+            raise BadRequest("Firewall group is locked.")
         db_service.add_rule_in_group(firewall, rule)
+
+
+@router.post(
+    "/firewall/{firewall_id}/apply",
+    tags=["Firewall API"],
+    summary="Schedule apply a firewall group to a node"
+)
+async def apply_firewall_group(firewall: SecurityGroup = Depends(get_firewall_group_by_id),
+                               node: Node = Depends(get_node_by_id)):
+    logger.info(f"Received firewall group application request[{firewall.id}] to node: {node.node_id}")
+    with db_session:
+        db_service.apply_firewall_group(firewall, node)
 
 
 @router.put(

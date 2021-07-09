@@ -13,6 +13,9 @@ class Node(database.Entity):
     node_ip = orm.Required(str)
     timestamp = orm.Required(int)
 
+    node_security_group = orm.Required("SecurityGroup", reverse="nodes")
+    firewall_updates = orm.Set("SecurityGroupUpdate", reverse="ref_node")
+
     def json(self):
         return {
             "node_id": self.node_id,
@@ -23,7 +26,7 @@ class Node(database.Entity):
 
 
 class PingHistory(database.Entity):
-    _table_ = 'plugin_heartbeat_ping_history'
+    _table_ = 'plugin_nodes_ping_history'
 
     id = PrimaryKey(int, auto=True)
     node_id = orm.Required(str)

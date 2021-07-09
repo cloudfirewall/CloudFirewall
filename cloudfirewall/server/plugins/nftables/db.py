@@ -7,10 +7,10 @@ from cloudfirewall.server.plugins.nftables.dto import CreateFirewallRequest, Fir
 from cloudfirewall.server.plugins.nftables.entities import SecurityGroup, SecurityGroupRule, SecurityGroupUpdate
 
 
-class DatabaseService(BaseDBService):
+class FirewallDatabaseService(BaseDBService):
 
     def __init__(self):
-        super(DatabaseService, self).__init__()
+        super(FirewallDatabaseService, self).__init__()
 
     @db_session
     def create_firewall_group(self, create_request: CreateFirewallRequest):

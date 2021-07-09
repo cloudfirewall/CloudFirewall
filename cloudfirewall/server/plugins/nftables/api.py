@@ -5,26 +5,26 @@ from pony.orm import db_session
 
 from cloudfirewall.server.plugins.common.exceptions import BadRequest
 from cloudfirewall.server.plugins.heartbeat.entities import Node
-from cloudfirewall.server.plugins.nftables.db import DatabaseService
+from cloudfirewall.server.plugins.nftables.db import FirewallDatabaseService
 from cloudfirewall.server.plugins.nftables.dto import CreateFirewallRequest, RulesetRequest, FirewallRuleRequest
 from cloudfirewall.server.plugins.nftables.entities import SecurityGroup, SecurityGroupRule
 from cloudfirewall.server.plugins.heartbeat.db import DatabaseService as NodeDatabaseService
 
 router = APIRouter()
-db_service = DatabaseService()
+firewall_db_service = FirewallDatabaseService()
 node_db_service = NodeDatabaseService()
 logger = logging.getLogger(__name__)
 
 
 async def get_firewall_group_by_id(firewall_id: int):
-    firewall = db_service.get_firewall_group(firewall_id)
+    firewall = firewall_db_service.get_firewall_group(firewall_id)
     if not firewall:
         raise BadRequest(f"Firewall Group[{firewall_id}] does not exist")
     return firewall
 
 
 async def get_firewall_rule_by_id(rule_id: int):
-    rule = db_service.get_firewall_rule(rule_id)
+    rule = firewall_db_service.get_firewall_rule(rule_id)
     if not rule:
         raise BadRequest(f"Firewall Rule[{rule_id}] does not exist")
     return rule
@@ -45,7 +45,7 @@ async def get_node_by_id(node_id: str):
 async def list_firewall_groups():
     logger.info(f"Received list firewall group request")
     with db_session:
-        return [group.json() for group in db_service.list_firewall_groups()]
+        return [group.json() for group in firewall_db_service.list_firewall_groups()]
 
 
 @router.get(
@@ -69,7 +69,7 @@ async def get_firewall_group(firewall: SecurityGroup = Depends(get_firewall_grou
 async def create_firewall_group(create_request: CreateFirewallRequest):
     logger.info(f"Received create firewall request: {create_request}")
     with db_session:
-        db_service.create_firewall_group(create_request)
+        firewall_db_service.create_firewall_group(create_request)
 
 
 @router.post(
@@ -83,7 +83,7 @@ async def add_firewall_rule(rule: FirewallRuleRequest,
     with db_session:
         if firewall.locked:
             raise BadRequest("Firewall group is locked.")
-        db_service.add_rule_in_group(firewall, rule)
+        firewall_db_service.add_rule_in_group(firewall, rule)
 
 
 @router.post(
@@ -95,7 +95,7 @@ async def apply_firewall_group(firewall: SecurityGroup = Depends(get_firewall_gr
                                node: Node = Depends(get_node_by_id)):
     logger.info(f"Received firewall group application request[{firewall.id}] to node: {node.node_id}")
     with db_session:
-        db_service.apply_firewall_group(firewall, node)
+        firewall_db_service.apply_firewall_group(firewall, node)
 
 
 @router.put(
@@ -109,7 +109,7 @@ async def update_firewall_rule(rule_request: FirewallRuleRequest,
                             rule_ro: SecurityGroupRule = Depends(get_firewall_rule_by_id)):
     logger.info(f"Received create firewall request: {rule_request}")
     with db_session:
-        db_service.update_rule_in_group(rule_ro, rule_request)
+        firewall_db_service.update_rule_in_group(rule_ro, rule_request)
 
 
 @router.delete(
@@ -122,4 +122,4 @@ async def update_firewall_rule(firewall_ro: SecurityGroup = Depends(get_firewall
                                rule_ro: SecurityGroupRule = Depends(get_firewall_rule_by_id)):
     logger.info(f"Received delete firewall request: {rule_ro}")
     with db_session:
-        db_service.delete_rule_in_group(rule_ro)
+        firewall_db_service.delete_rule_in_group(rule_ro)

@@ -2,3 +2,6 @@ grpcio
 grpcio-tools
 python-dotenv
 pyyaml
+sqlalchemy
+fastapi
+pydantic

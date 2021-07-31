@@ -46,7 +46,7 @@ handlers:
         # Custom Format defined in formatter block
         formatter: standard
         # File Name
-        filename: logs/info.log
+        filename: /tmp/info.log
         # Max store value - 10 MB
         maxBytes: 10485760
         # Backup count - Rollover attribute
@@ -62,7 +62,7 @@ handlers:
         # Custom Format defined in formatter block
         formatter: error
         # File Name
-        filename: logs/error.log
+        filename: /tmp/error.log
         # Max store value - 10 MB
         maxBytes: 10485760
         # Backup count - Rollover attribute

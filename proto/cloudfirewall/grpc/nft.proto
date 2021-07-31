@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package cloudfirewall;
+
+service FirewallRules{
+
+  rpc Agent(RulesetRequest) returns (Rulesets) {}
+
+  rpc AgentRuleset(AddRuleset) returns (Status) {}
+
+}
+
+message RulesetRequest {
+
+  string request_id = 1;
+  string request_rules = 2;
+
+
+}
+
+message Rulesets {
+
+  string request_id = 1;
+  string request_rules = 2;
+  string send_content_nft= 3;
+
+
+}
+
+
+message AddRuleset {
+
+  string request_id = 1;
+
+}
+
+message Status {
+
+  string request_id = 1;
+
+}

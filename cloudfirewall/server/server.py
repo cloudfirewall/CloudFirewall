@@ -6,7 +6,7 @@ from signal import signal, SIGTERM
 import grpc
 
 from cloudfirewall.common.path_utils import resolve_path
-from cloudfirewall.server.servicer.agent_servicer import FirewallAgentServicer
+from cloudfirewall.server.servicer.agent_servicer import FirewallAgentServicer,AgentFirewallServicer
 
 SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
 SERVER_PORT = int(os.environ.get('SERVER_PORT', '50051'))
@@ -74,5 +74,10 @@ class CloudServer:
 
     def load_servicers(self):
         self.logger.info("Loading GRPC Service servicers")
+
         agent_servicer = FirewallAgentServicer(self.server)
         self.servicers.append(agent_servicer)
+
+        agentfirewall_servicer = AgentFirewallServicer(self.server)
+        self.servicers.append(agentfirewall_servicer)
+

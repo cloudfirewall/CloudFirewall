@@ -5,7 +5,7 @@ import uuid
 
 import grpc
 
-from cloudfirewall.agent.service.agent_service import AgentService
+from cloudfirewall.agent.service.agent_service import AgentService, AgentFirewall
 from cloudfirewall.common.path_utils import resolve_path
 
 SERVER_HOST = os.environ.get('SERVER_HOST', 'localhost')
@@ -60,6 +60,9 @@ class CloudAgent:
         self.logger.info("Loading GPRC services")
         agent_service = AgentService(self, self.channel)
         self.services.append(agent_service)
+
+        agent_firewall = AgentFirewall(self, self.channel)
+        self.services.append(agent_firewall)
 
     def wait_for_termination(self):
         loop = asyncio.get_event_loop()

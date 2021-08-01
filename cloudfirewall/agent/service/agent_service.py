@@ -103,13 +103,13 @@ class AgentFirewall(TaskManager):
             #--------------uncomment the below line to run the command---------
             #--------------replace the password with your system password---------
 
-            sudoPassword = 'gagan@gbs123'    #senitive
+            # sudoPassword = '!!!!!!PASSWORD HERE!!!!!'    #senitive
 
-            command__to_read_nft_file = f'nft -f firewall.nft'
+            # command__to_read_nft_file = f'nft -f firewall.nft'
 
            
-            f = os.system('echo %s|sudo -S %s' % (sudoPassword, command__to_read_nft_file))
-            print(f)
+            # f = os.system('echo %s|sudo -S %s' % (sudoPassword, command__to_read_nft_file))
+            # print(f)
 
 
 

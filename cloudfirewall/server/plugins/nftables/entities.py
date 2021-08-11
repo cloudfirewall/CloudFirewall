@@ -29,6 +29,7 @@ class SecurityGroup(database.Entity):
 
     # Nodes where this security group is applied
     nodes = orm.Set("Node", reverse="node_security_group")
+    # pending_nodes = orm.Set("Node", reverse="pending_security_group")
 
     # Updates to the nodes
     node_updates = orm.Set("SecurityGroupUpdate", reverse="ref_security_group")
@@ -135,3 +136,10 @@ class SecurityGroupUpdate(database.Entity):
             pending=True
         )
         update.flush()
+
+    @classmethod
+    def get_pending_firewall(cls, node: Node):
+        pending_sg = SecurityGroupUpdate.get(ref_node=node)
+        if pending_sg:
+            return SecurityGroupUpdate[pending_sg.id].ref_security_group
+        return None

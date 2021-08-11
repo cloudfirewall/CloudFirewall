@@ -41,7 +41,8 @@ class DatabaseService(BaseDBService):
                 node_name=ping_request.node_name,
                 node_ip=node_ip,
                 timestamp=int(time.time()),
-                node_security_group=SecurityGroup.get_default()
+                node_security_group=SecurityGroup.get_default(),
+                # pending_security_group=None
             )
 
     @db_session

@@ -14,7 +14,15 @@ class Node(database.Entity):
     timestamp = orm.Required(int)
 
     node_security_group = orm.Required("SecurityGroup", reverse="nodes")
+    # pending_security_group = orm.Required("SecurityGroup", reverse="pending_nodes")
     firewall_updates = orm.Set("SecurityGroupUpdate", reverse="ref_node")
+
+    @classmethod
+    def get_by_node_id(cls, node_id):
+        node = Node.get(node_id=node_id)
+        if node:
+            return Node[node.id]
+        return None
 
     def json(self):
         return {

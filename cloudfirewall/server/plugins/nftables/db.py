@@ -73,3 +73,10 @@ class FirewallDatabaseService(BaseDBService):
         except Exception as ex:
             self.logger.exception(ex)
             raise ServerError("Failed to apply firewall group to the node")
+
+    @db_session
+    def get_pending_node_firewall_group(self, node_ip):
+        node = Node.get_by_node_id(node_ip)
+        if node:
+            return SecurityGroupUpdate.get_pending_firewall(node)
+        return None

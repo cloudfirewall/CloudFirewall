@@ -6,3 +6,9 @@ pyroute2
 python-dotenv
 fastapi[all]
 pony
+SQLAlchemy
+fastapi_utils
+ipaddr
+sqlalchemy_utils
+pyjwt
+passlib

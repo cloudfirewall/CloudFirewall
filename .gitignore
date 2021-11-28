@@ -22,7 +22,7 @@ __pycache__
 
 # Documentation
 docs/_build/
-
+node_modules/
 # PyInstaller
 build/cloudfirewall
 dist/

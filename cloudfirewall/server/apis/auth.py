@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Depends, Header, HTTPException, Security
+from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from typing import Optional, List
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 import jwt
+import os
 
-key="CFsecret"
+load_dotenv()
+
+key= os.environ.get("JWT_ADMIN")
 context = CryptContext(schemes=['bcrypt'], deprecated="auto") 
 security= HTTPBearer()
 
@@ -13,7 +16,7 @@ def encode_token(username):
     payload= {'exp':datetime.utcnow()+timedelta(days=1, minutes=20),
               'iat': datetime.utcnow(),
               'sub': username}
-    return jwt.encode(payload, key, algorithms='HS256')
+    return jwt.encode(payload, key, algorithm='HS256')
 
 def decode_token(token):
     try:

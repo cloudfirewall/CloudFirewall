@@ -1,15 +1,18 @@
 from fastapi import APIRouter, Depends, Header
 from typing import Optional, List
-from enum import Enum
 from sqlalchemy.orm import Session
 from ipaddress import IPv4Address
-from .. import schemas, crud, auth
+from .. import schemas, auth
+from ..cruds import insatnces as crud
 from ..database import SessionLocal, engine
-from .. import schemas
-import jwt
 import datetime, uuid, json
+import jwt
+from ..utils import get_db
+from dotenv import load_dotenv
+import os
 
-key="CFsecret"
+
+key=os.environ.get("JWT_INSTANCE")
 PROTECTED = [Depends(auth.auth_wrapper)]
 
 router = APIRouter(
@@ -20,19 +23,9 @@ router = APIRouter(
 
 )
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 def defaultconverterDateTime(o):
   if isinstance(o, datetime.datetime):
       return o.__str__()
-
-
-
 
 @router.post("/", response_model = schemas.instance)
 async def createAninstance(instance:schemas.instanceCreate, db: Session = Depends(get_db), token:str= Header(None)):

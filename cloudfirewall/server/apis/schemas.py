@@ -54,10 +54,16 @@ class instanceCreate(instanceBase):
 
 class instance(instanceBase):
     id: UUID
-    securityGroup: securityGroup
+    securityGroup: Optional[securityGroup] 
     ip: IPv4Address
     status: int
     creationDate:datetime.datetime
+    class Config:
+        orm_mode = True
+
+class inastancesSecurityGroup(instanceBase):
+    ip: IPv4Address
+    id: UUID
     class Config:
         orm_mode = True
 

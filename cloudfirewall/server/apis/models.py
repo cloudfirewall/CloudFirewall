@@ -1,10 +1,8 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Table, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
-from fastapi_utils.guid_type import GUID
 from sqlalchemy_utils import UUIDType
 from .database import Base
 import datetime
-import enum
 import uuid
 
 

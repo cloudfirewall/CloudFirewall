@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from typing import Optional, List
-from enum import Enum
 from sqlalchemy.orm import Session
-from .. import schemas, crud, auth
+from .. import schemas, auth
 from ..database import SessionLocal, engine
-from .. import schemas
+from ..cruds import securityGroups as crud
+from ..utils import get_db
 
 PROTECTED = [Depends(auth.auth_wrapper)]
 
@@ -16,23 +16,25 @@ router = APIRouter(
 
 )
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 @router.post("/", response_model = schemas.securityGroup )
 async def createASecurityGroup(securityGroup:schemas.securityGroupCreate, db: Session = Depends(get_db)):
     securityGroup= crud.createASecurityGroup(db, securityGroup)
     return securityGroup
 
+@router.post("/default", status_code=201 )
+async def createDefaultSecurityGroup(db: Session = Depends(get_db)):
+    securityGroup= crud.createDefaultSecurityGroup(db)
+    return 
+
 @router.get("/", response_model = List[schemas.securityGroup])
 async def readSecurityGroup(name: Optional[str] = None, id: Optional[str] = None, defaultInboundPolicy: Optional[schemas.policy] = None, defaultOutboundPolicy: Optional[schemas.policy] = None, db: Session = Depends(get_db)):
     securityGroups = crud.readSecurityGroup(db, name, id, defaultInboundPolicy, defaultOutboundPolicy)
     return securityGroups
+
+@router.get("/instances", response_model=List[schemas.inastancesSecurityGroup])
+async def getSecurityGroupInstances(securityGroupId:str, db: Session = Depends(get_db)):
+    instances = crud.getSecurityGroupInstances(db, securityGroupId)
+    return instances
 
 @router.get("/{securityGroupId}",response_model = List[schemas.securityGroup])
 async def readSecurityGroupById(securityGroupId:str, db: Session = Depends(get_db)):

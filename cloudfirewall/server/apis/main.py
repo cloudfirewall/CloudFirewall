@@ -1,10 +1,8 @@
-from . import models, auth
-from .database import SessionLocal, engine
+from .database import engine
 from .routers import instances, securityGroups, admin
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from . import crud
-from .schemas import adminCreate
+from fastapi import FastAPI
+from . import models
+
 
 app = FastAPI()
 app.include_router(instances.router)

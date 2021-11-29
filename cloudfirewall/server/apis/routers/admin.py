@@ -1,30 +1,25 @@
-from fastapi import APIRouter, Depends, Header, HTTPException, Security
-from typing import Optional, List
-from datetime import datetime, timedelta
+from fastapi import APIRouter, Depends,HTTPException, Security
 from sqlalchemy.orm import Session
-from .. import schemas, crud
-from ..database import SessionLocal, engine
-import jwt
+from .. import schemas
+from ..cruds import admin as crud
 from ..schemas import admin
 from .. import models
 from .. import auth
+from dotenv import load_dotenv
+from ..utils import get_db
+import os
 
-key="CFsecret"
+load_dotenv()
+key= os.environ.get("JWT_ADMIN")
 
-PROTECTED = [Depends(auth.auth_wrapper)]
+
 router = APIRouter(
     prefix="/admin",
     tags=["admin"],
     responses={404:{"description":"Not found"}},
-    dependencies=PROTECTED
 )
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
+adminDetails={"id":1, "username":os.environ.get("ADMIN_USER"), "password":os.environ.get("ADMIN_PASSWORD")}
 
 @router.post('/createAdmin', status_code=201)
 async def addAdmin(db: Session = Depends(get_db)): 

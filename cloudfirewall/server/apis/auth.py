@@ -20,12 +20,11 @@ def encode_token(username):
 
 def decode_token(token):
     try:
-        payload = jwt.decode(token, key,algorithms='HS256')
+        payload = jwt.decode(token,key,algorithms='HS256')
         return payload['sub']
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail='Signature has expired' )
+        raise HTTPException(status_code=401, detail='Token signature has expired' )
     except jwt.InvalidTokenError as e:
-        print(e)
         raise HTTPException(status_code=401, detail='Invalid token')  
         
 def auth_wrapper(auth:HTTPAuthorizationCredentials = Security(security)):

@@ -13,15 +13,16 @@ load_dotenv()
 key= os.environ.get("JWT_ADMIN")
 
 
+
 router = APIRouter(
     prefix="/admin",
     tags=["admin"],
-    responses={404:{"description":"Not found"}},
+    responses={404:{"description":"Not found"}, 403:{"description":"aleardy exists"}, 500:{"description":"Internal Server Error"}},
 )
 
 adminDetails={"id":1, "username":os.environ.get("ADMIN_USER"), "password":os.environ.get("ADMIN_PASSWORD")}
 
-@router.post('/createAdmin', status_code=201)
+@router.post('/createAdmin', status_code=200)
 async def addAdmin(db: Session = Depends(get_db)): 
     crud.createAdmin(db, adminDetails)
     return 

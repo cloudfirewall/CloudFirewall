@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session
 from ipaddress import IPv4Address
+from fastapi import HTTPException
 from .. import models, schemas, auth
 import datetime
-
+from pydantic import UUID4
 
 def createASecurityGroup(db: Session, securityGroup: schemas.securityGroupCreate):
+    if db.query(models.SecurityGroups).filter(models.SecurityGroups.name==securityGroup.name).first():
+        raise HTTPException(status_code=403, detail="Security Group name aleardy exixts")
     dbSecurityGroup = models.SecurityGroups(name=securityGroup.name,description= securityGroup.description,defaultOutboundPolicy=securityGroup.defaultOutboundPolicy,defaultInboundPolicy=securityGroup.defaultInboundPolicy, creationDate=datetime.datetime.now())                  
     if securityGroup.rules:
         for rule in securityGroup.rules: 
@@ -27,7 +30,7 @@ def createDefaultSecurityGroup(db: Session):
         db.refresh (dbSecurityGroup)
     return
 
-def readSecurityGroup(db: Session, name:str, id:str, defaultInboundPolicy: schemas.policy, defaultOutboundPolicy:schemas.policy): 
+def readSecurityGroup(db: Session, name:str, id:UUID4, defaultInboundPolicy: schemas.policy, defaultOutboundPolicy:schemas.policy): 
     result= db.query(models.SecurityGroups)
     if name:
         result=result.filter(models.SecurityGroups.name==name)
@@ -39,32 +42,47 @@ def readSecurityGroup(db: Session, name:str, id:str, defaultInboundPolicy: schem
         result=result.filter(models.SecurityGroups.defaultOutboundPolicy==defaultOutboundPolicy)
     return result.all()
 
-def readSecurityGroupById(db: Session, id: str):
+def readSecurityGroupById(db: Session, id:UUID4):
     result= db.query(models.SecurityGroups).filter(models.SecurityGroups.id==id).all()
     return result
 
-def getSecurityGroupInstances(db: Session, id:str):
+def getSecurityGroupInstances(db: Session, id:UUID4):
     result= db.query(models.SecurityGroups).filter(models.SecurityGroups.id==id).first()
     insatnces = result.instances
     return insatnces
 
-def editSecurityGroupById(db: Session, id: str, securityGroup: schemas.securityGroupEdit):
+def editSecurityGroupById(db: Session, id:UUID4, securityGroup: schemas.securityGroupEdit):
     result= db.query(models.SecurityGroups).filter(models.SecurityGroups.id==id).first()
     if result:
-        deleteSecurityGroupById(db,result.id)           
-    editedSG =createASecurityGroup(db, securityGroup)
-    db.commit()    
-    return editedSG
+        if db.query(models.SecurityGroups).filter(models.SecurityGroups.name==securityGroup.name).first():
+            if result.name != securityGroup.name:
+                raise HTTPException(status_code=403, detail="The name aleardy exixts")
+        db.query(models.SecurityGroups).filter(models.SecurityGroups.id==id).update({models.SecurityGroups.name:securityGroup.name, models.SecurityGroups.description:securityGroup.description, models.SecurityGroups.defaultInboundPolicy:securityGroup.defaultInboundPolicy, models.SecurityGroups.defaultOutboundPolicy:securityGroup.defaultOutboundPolicy})
+        result.rules.clear()
+        if securityGroup.rules:
+            for rule in securityGroup.rules: 
+                res= db.query(models.Rules).filter(models.Rules.protocol==rule.protocol, models.Rules.policy==rule.policy, models.Rules.port==rule.port, models.Rules.ip==str(rule.ip), models.Rules.trafficDirection==rule.trafficDirection).first()
+                if not res:
+                    result.rules.append(models.Rules(protocol=rule.protocol,policy=rule.policy, port=rule.port, ip=str(rule.ip), description= rule.description, trafficDirection=rule.trafficDirection))
+                else:
+                    result.rules.append(res)   
+        db.commit()    
+        return result
+    else:
+        raise HTTPException(status_code=404, detail="Security Group does not exist")
 
-def deleteSecurityGroupById(db: Session, id: str):
-    result= db.query(models.SecurityGroups).filter(models.SecurityGroups.id==id)
-    securityGroup=result.first()
-    rules = securityGroup.rules
-    securityGroup.rules.clear()
-    db.add(securityGroup)
-    db.delete(securityGroup)
-    db.commit()
-    return 
+def deleteSecurityGroupById(db: Session, id:UUID4):
+    result= db.query(models.SecurityGroups).filter(models.SecurityGroups.id==id).first()
+    if result.name=="defaultSG":
+        raise HTTPException(status_code=405, detail="can't delete default security Group")
+    if result:
+        result.rules.clear()
+        db.add(result)
+        db.delete(result)
+        db.commit()
+        return
+    else:
+        raise HTTPException(status_code=404, detail="Security Group does not exist")
 
 
 

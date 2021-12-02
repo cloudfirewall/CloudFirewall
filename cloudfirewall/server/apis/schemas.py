@@ -1,9 +1,8 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID4
 from enum import Enum
 from ipaddress import IPv4Network, IPv4Address
 import datetime
-from uuid import UUID
 
 class policy(str, Enum):
     accept = "accept"
@@ -14,8 +13,12 @@ class trafficDirection(str, Enum):
     inbound = "inbound"
     outbound = "outbound"
 
+class protocol(str, Enum):
+    TCP="TCP"
+    UDP="UDP"
+
 class ruleBase(BaseModel):
-    protocol: str
+    protocol: protocol
     policy: policy
     port: int
     ip: IPv4Network
@@ -39,7 +42,7 @@ class securityGroupEdit(securityGroupBase):
     pass
    
 class securityGroup(securityGroupBase):
-    id: UUID
+    id: UUID4
     creationDate:datetime.datetime
     class Config:
         orm_mode = True
@@ -53,7 +56,7 @@ class instanceCreate(instanceBase):
     ip: IPv4Address
 
 class instance(instanceBase):
-    id: UUID
+    id: UUID4
     securityGroup: Optional[securityGroup] 
     ip: IPv4Address
     status: int
@@ -63,12 +66,12 @@ class instance(instanceBase):
 
 class inastancesSecurityGroup(instanceBase):
     ip: IPv4Address
-    id: UUID
+    id: UUID4
     class Config:
         orm_mode = True
 
 class instanceEdit(instanceBase):
-    securityGroupId: str
+    securityGroupId: UUID4
 
 class adminBase(BaseModel):
     username: str

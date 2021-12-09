@@ -10,6 +10,10 @@ rulesAssocialtionTable = Table('rulesAssociation', Base.metadata,
     Column('ruleId', ForeignKey('rule.id')),
     Column('securityGroupId', ForeignKey('securityGroup.id'))
 )
+rulesInstancesAssocialtionTable = Table('rulesInstancesAssocialtion', Base.metadata,
+    Column('ruleId', ForeignKey('rule.id')),
+    Column('InstanceId', ForeignKey('instance.id'))
+)
 
 class SecurityGroups(Base):
     __tablename__ = 'securityGroup'
@@ -33,6 +37,7 @@ class Rules(Base):
     description = Column(String)
     trafficDirection = Column (String)
     securityGroups = relationship ("SecurityGroups", secondary=rulesAssocialtionTable)
+    instances = relationship ("Instances", secondary=rulesInstancesAssocialtionTable)
     
 class Instances(Base):
     __tablename__ = 'instance'
@@ -45,6 +50,7 @@ class Instances(Base):
     status = Column(Integer)
     securityGroupId = Column("securityGroupId", ForeignKey('securityGroup.id'))
     securityGroup = relationship("SecurityGroups", back_populates='instances')
+    appliedRules = relationship ("Rules", secondary=rulesInstancesAssocialtionTable, back_populates="instances")
 
 class Admin(Base):
     __tablename__='admin'

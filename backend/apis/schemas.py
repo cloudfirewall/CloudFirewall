@@ -61,6 +61,7 @@ class instance(instanceBase):
     ip: IPv4Address
     status: int
     creationDate:datetime.datetime
+    appliedRules: Optional[List[ruleBase]] = None
     class Config:
         orm_mode = True
 

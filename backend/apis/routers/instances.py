@@ -66,7 +66,11 @@ async def editInstanceById(instanceId:UUID4,instance:schemas.instanceEdit, db: S
     if instance is None:
         raise HTTPException(status_code=404)
     return instance
-    
+
+@router.patch("/updateAppliedRules{instanceId}", status_code=200)
+async def updateAppliedRules(instanceId:UUID4, rules:List[schemas.ruleBase],db: Session = Depends(get_db)):
+    crud.updateAppliedRules(db, instanceId, rules) 
+    return {"detail":"Successfully updated"}   
 
 @router.delete("/{instanceId}", status_code=200)
 async def deleteInstanceById(instanceId:UUID4,db: Session = Depends(get_db)):

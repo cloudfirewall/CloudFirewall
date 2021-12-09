@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from typing import List
 from fastapi import HTTPException
 from ipaddress import IPv4Address
 from .. import models, schemas
@@ -48,13 +49,15 @@ def readInstance(db: Session, name:str, id:UUID4, ip:IPv4Address , status: int):
     return result.all()
 
 def deleteInstanceById(db: Session, id:UUID4):
-    result= db.query(models.Instances).filter(models.Instances.id==id)
-    instance=result.first()
-    if instance is None:
+    result= db.query(models.Instances).filter(models.Instances.id==id).first()
+    if result is None:
         raise HTTPException(status_code=404)
-    db.delete(instance)
+    result.appliedRules.clear()
+    db.add(result)
+    db.delete(result)
     db.commit()
-    return 
+    return
+  
 
 def readInstanceById(db: Session, id:UUID4):
     result= db.query(models.Instances).filter(models.Instances.id==id).first()
@@ -74,3 +77,19 @@ def editInstanceById(db: Session, id:UUID4, instance: schemas.instanceEdit):
         return result
     else:
         raise HTTPException(status_code=404)
+
+def updateAppliedRules(db:Session, id: UUID4, rules:List[schemas.ruleBase]):
+    result= db.query(models.Instances).filter(models.Instances.id==id).first()
+    if result:
+        result.appliedRules.clear()
+        if rules:
+            for rule in rules: 
+                res= db.query(models.Rules).filter(models.Rules.protocol==rule.protocol, models.Rules.policy==rule.policy, models.Rules.port==rule.port, models.Rules.ip==str(rule.ip), models.Rules.trafficDirection==rule.trafficDirection).first()
+                if not res:
+                    result.appliedRules.append(models.Rules(protocol=rule.protocol,policy=rule.policy, port=rule.port, ip=str(rule.ip), description= rule.description, trafficDirection=rule.trafficDirection))
+                else:
+                    result.appliedRules.append(res)   
+        db.commit()    
+        return 
+    else:
+        raise HTTPException(status_code=404, detail="Instance does not exist")

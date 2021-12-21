@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import Nav from './Nav'
 import Footer from './Footer'
+import NavHeader from './nav-bar'
 
 type Props = {
   children?: ReactNode
@@ -18,11 +19,11 @@ const Layout = ({ children, title = 'CloudFirewall', showBackButton = true }: Pr
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
     <header>
-      <Nav title={title} showBackButton={showBackButton}/>
+      <NavHeader title="Cloud Firewall"/>
     </header>
     {children}
     <footer>
-      <Footer/>
+      {/* <Footer/> */}
     </footer>
   </div>
 )

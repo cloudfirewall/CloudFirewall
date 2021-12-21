@@ -1,6 +1,6 @@
 import * as React from "react";
-import Layout from "../components/Layout";
-import Layout_ from "../components/Layout_";
+import Layout from "../../components/Layout";
+import Layout_ from "../../components/Layout_";
 
 type Props = {};
 

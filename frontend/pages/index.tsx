@@ -1,26 +1,34 @@
-import * as React from "react";
-import InstancesList from "../components/ServerList";
-import Layout from "../components/Layout";
+import { Col, Nav, Row, Tab } from "react-bootstrap";
+import Layout from "../components/Layout_";
 import SecurityGroupsList from "../components/SecurityGroupsList";
-import SecurityGroupAndInstanceToggle from "../components/SGandInstanceToggle";
-import { Tabs } from "../types";
+import InstancesList from "../components/ServerList";
 
-type Props = {};
-
-const HomePage: React.FC<Props> = ({}) => {
-  const [selectedTab, setSelectedTab] = React.useState<Tabs>(Tabs.INSTANCES);
+export default function HomePage({ selectedTab = "instances" }) {
   return (
-    <Layout showBackButton={false}>
-      <section className="py-2">
-        <SecurityGroupAndInstanceToggle selectedTab={selectedTab} setSelectedTab={setSelectedTab}/>
-        {selectedTab === Tabs.INSTANCES ? (
-          <InstancesList/>
-        ) : (
-          <SecurityGroupsList/>
-        )}
-      </section>
+    <Layout>
+      <div className="my-10"></div>
+      <Tab.Container defaultActiveKey="instances">
+        <Nav variant="pills" className="flex-row justify-center">
+          <Nav.Item className="border-2 rounded">
+            <Nav.Link eventKey="instances" className="w-40 text-center">
+              Instances
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item className="border-2 rounded">
+            <Nav.Link eventKey="security" className="w-40 text-center">
+              Security Groups{" "}
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+        <Tab.Content>
+          <Tab.Pane eventKey="instances">
+            <InstancesList />
+          </Tab.Pane>
+          <Tab.Pane eventKey="security">
+            <SecurityGroupsList />
+          </Tab.Pane>
+        </Tab.Content>
+      </Tab.Container>
     </Layout>
   );
-};
-
-export default HomePage;
+}

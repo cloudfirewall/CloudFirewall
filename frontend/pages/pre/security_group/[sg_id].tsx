@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
-import InBoundList from "../../components/InBoundList";
-import Layout from "../../components/Layout";
-import OutBoundList from "../../components/OutBoundList";
-import { Policy, Protocol, TrafficDirection, FormData } from "../../types";
+import InBoundList from "../../../components/InBoundList";
+import Layout from "../../../components/Layout";
+import OutBoundList from "../../../components/OutBoundList";
+import { Policy, Protocol, TrafficDirection, FormData } from "../../../types";
 
 type Props = {};
 

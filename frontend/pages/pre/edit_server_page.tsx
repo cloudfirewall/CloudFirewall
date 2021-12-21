@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
-import Layout from "../components/Layout";
-import Overlay from "../components/Overlay";
-import OverlayContent from "../components/OverlayContent";
+import Layout from "../../components/Layout";
+import Overlay from "../../components/Overlay";
+import OverlayContent from "../../components/OverlayContent";
 
 type Props = {};
 
@@ -146,7 +146,7 @@ const EditServerPage: React.FC<Props> = ({}) => {
         </section>
       </Layout>
       {showOverlay ? (
-        <Overlay hideOverlay={hideOverlay}>
+        <Overlay setShowOverlay={setShowOverlay}>
           <OverlayContent />
         </Overlay>
       ) : null}

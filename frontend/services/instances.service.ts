@@ -13,7 +13,7 @@ export const instanceService = {
 const baseUrl = 'localhost:8080';
 
 // to read instance
-function readInstances(name: string, id: string, ip: string, status: number) {
+function readInstances(name?: string, id?: string, ip?: string, status?: number) {
     return fetchWrapper.get(`${baseUrl}/instances`);
 }
 

@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import * as React from "react";
-import Layout from "../components/Layout";
-import { Policy, Protocol, TrafficDirection, FormData } from "../types";
+import Layout from "../../components/Layout";
+import { Policy, Protocol, TrafficDirection, FormData } from "../../types";
 
 type Props = {};
 
@@ -93,7 +93,7 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
               className="form-control"
             />
           </div>
-          <div className="flex flex-row space-x-4 items-center form-group container">
+          <div className="  flex flex-row space-x-4 items-center form-group container">
             <label className="w-32 font-semibold" htmlFor="description">
               Description:
             </label>

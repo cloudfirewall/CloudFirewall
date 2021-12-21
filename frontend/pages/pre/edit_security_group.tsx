@@ -1,9 +1,9 @@
 import Link from "next/link";
 import * as React from "react";
-import Layout from "../components/Layout";
-import Overlay from "../components/Overlay";
-import OverlayContent from "../components/OverlayContent";
-import { Policy, Protocol, TrafficDirection, FormData } from "../types";
+import Layout from "../../components/Layout";
+import Overlay from "../../components/Overlay";
+import OverlayContent from "../../components/OverlayContent";
+import { Policy, Protocol, TrafficDirection, FormData } from "../../types";
 
 type Props = {};
 
@@ -356,7 +356,7 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
         </div>
       </Layout>
       {showOverlay ? (
-        <Overlay hideOverlay={hideOverlay}>
+        <Overlay setShowOverlay={setShowOverlay}>
           <OverlayContent />
         </Overlay>
       ) : null}

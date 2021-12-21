@@ -2,81 +2,11 @@ import * as React from "react";
 import SearchBarItem from "./SearchBar";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { Pagination } from "react-bootstrap";
+import { securityGroups } from '../utils/data';
 
 type Props = {};
 
-const securityGroups = [
-  {
-    uuid: 0,
-    name: "string",
-    desc: "string",
-    creationDate: "2021-11-15T05:58:08.398Z",
-    defaultInboundPolicy: "drop",
-    defaultOutboundPolicy: "drop",
-    rules: [
-      {
-        uuid: 0,
-        protocol: "string",
-        ip: "0.0.0.0/0",
-        port: 0,
-        policy: "drop",
-        desc: "string",
-        trafficDirection: "inbound",
-      },
-    ],
-    instances: [
-      {
-        uuid: 0,
-        name: "string",
-        ip: "string",
-        desc: "string",
-        creationDate: "2021-11-15T05:58:08.398Z",
-        onlineInfo: [
-          {
-            startTime: 0,
-            "period(ms)": 0,
-          },
-        ],
-        securityGroup: "string",
-      },
-    ],
-  },
-  {
-    uuid: 0,
-    name: "string",
-    desc: "string",
-    creationDate: "2021-11-15T05:58:08.398Z",
-    defaultInboundPolicy: "drop",
-    defaultOutboundPolicy: "drop",
-    rules: [
-      {
-        uuid: 0,
-        protocol: "string",
-        ip: "0.0.0.0/0",
-        port: 0,
-        policy: "drop",
-        desc: "string",
-        trafficDirection: "inbound",
-      },
-    ],
-    instances: [
-      {
-        uuid: 0,
-        name: "string",
-        ip: "string",
-        desc: "string",
-        creationDate: "2021-11-15T05:58:08.398Z",
-        onlineInfo: [
-          {
-            startTime: 0,
-            "period(ms)": 0,
-          },
-        ],
-        securityGroup: "string",
-      },
-    ],
-  },
-];
 
 const SecurityGroupsList: React.FC<Props> = ({}) => {
   const router = useRouter();
@@ -111,8 +41,8 @@ const SecurityGroupsList: React.FC<Props> = ({}) => {
         </div>
       </div>
 
-      <div className="p-2 md:p-5 shadow-md">
-        <table className="table table-striped">
+      <div className="px-5 shadow-md">
+        <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr>
               <th>SN</th>
@@ -140,6 +70,25 @@ const SecurityGroupsList: React.FC<Props> = ({}) => {
             ))}
           </tbody>
         </table>
+        <div className="flex flex-row-reverse">
+          <Pagination>
+            <Pagination.First />
+            <Pagination.Prev />
+            <Pagination.Item>{1}</Pagination.Item>
+            <Pagination.Ellipsis />
+
+            <Pagination.Item>{10}</Pagination.Item>
+            <Pagination.Item>{11}</Pagination.Item>
+            <Pagination.Item active>{12}</Pagination.Item>
+            <Pagination.Item>{13}</Pagination.Item>
+            <Pagination.Item disabled>{14}</Pagination.Item>
+
+            <Pagination.Ellipsis />
+            <Pagination.Item>{20}</Pagination.Item>
+            <Pagination.Next />
+            <Pagination.Last />
+          </Pagination>
+        </div>
       </div>
     </div>
   );

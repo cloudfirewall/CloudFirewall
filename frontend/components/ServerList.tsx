@@ -3,95 +3,36 @@ import SearchBarItem from "./SearchBar";
 import Link from "next/link";
 import EmptyInstancePage from "./EmptyInstancePage";
 import { useRouter } from "next/router";
+import { Pagination, Row, Col, Container, Button } from "react-bootstrap";
+import { instances } from "../utils/data";
+import { GetStaticProps } from "next";
+import { instanceService } from "../services/instances.service";
+import { Instance } from "../interfaces/Instance";
 
-type Props = {};
-const instances = [
-  {
-    uuid: 0,
-    name: "string",
-    ip: "string",
-    desc: "string",
-    creationDate: "2021-11-15T05:04:55.592Z",
-    onlineInfo: [
-      {
-        startTime: 0,
-        "period(ms)": 0,
-      },
-    ],
-    securityGroup: {
-      uuid: 0,
-      name: "string",
-      desc: "string",
-      creationDate: "2021-11-15T05:04:55.592Z",
-      defaultInboundPolicy: "drop",
-      defaultOutboundPolicy: "drop",
-      rules: [
-        {
-          uuid: 0,
-          protocol: "string",
-          ip: "0.0.0.0/0",
-          port: 0,
-          policy: "drop",
-          desc: "string",
-          trafficDirection: "inbound",
-        },
-      ],
-      instances: ["string"],
-    },
-  },
-  {
-    uuid: 1,
-    name: "string",
-    ip: "string",
-    desc: "string",
-    creationDate: "2021-11-15T05:04:55.592Z",
-    onlineInfo: [
-      {
-        startTime: 0,
-        "period(ms)": 0,
-      },
-    ],
-    securityGroup: {
-      uuid: 1,
-      name: "string",
-      desc: "string",
-      creationDate: "2021-11-15T05:04:55.592Z",
-      defaultInboundPolicy: "drop",
-      defaultOutboundPolicy: "drop",
-      rules: [
-        {
-          uuid: 1,
-          protocol: "string",
-          ip: "0.0.0.0/0",
-          port: 0,
-          policy: "drop",
-          desc: "string",
-          trafficDirection: "inbound",
-        },
-      ],
-      instances: ["string"],
-    },
-  },
-];
 
-const InstancesList: React.FC<Props> = ({}) => {
-  const [serverNo, setServerNo] = React.useState({
-    online: 1,
-    total: 2,
+export default function InstancesList() {
+  const [instanceNo, setInstanceNo] = React.useState({
+    online: instances.length,
+    total: instances.length,
   });
   const [searchText, setSearchText] = React.useState("");
+  const [currentPage, setCurrentPage] = React.useState(1);
   const [instanceList, setInstanceList] = React.useState(instances);
   const router = useRouter();
   const handleAddInstance = () => router.push("/add_server_page");
 
   const handleHelp = () => router.push("/help");
+  const getShowableInstances = (page: number) => {
+
+
+  }
 
   return (
     <div>
       <div className="flex flex-wrap justify-between items-center justify-items-stretch space-x-2 space-y-2 m-5">
         <div className="">
           <div className="px-3 py-2 w-max card shadow-md">
-            Online Servers {serverNo.online}/{serverNo.total}
+            Online Instances {instanceNo.online}/{instanceNo.total}
           </div>
         </div>
         <div className=" col-6">
@@ -109,11 +50,11 @@ const InstancesList: React.FC<Props> = ({}) => {
           </button>
         </div>
       </div>
-      {instanceList.length === 0 ? (
+      {instanceList?.length === 0 ? (
         <EmptyInstancePage />
       ) : (
-        <div className="p-2 md:p-4 shadow-md">
-          <table className="table table-striped">
+        <div className="px-5 shadow-md">
+          <table className="table table-bordered table-hover table-striped">
             <thead>
               <tr>
                 <th>SN</th>
@@ -127,7 +68,7 @@ const InstancesList: React.FC<Props> = ({}) => {
               </tr>
             </thead>
             <tbody>
-              {instanceList.map((instance, index) => (
+              {instanceList?.map((instance, index) => (
                 <tr key={index.toString()}>
                   <td>{index + 1}</td>
                   <td>
@@ -149,10 +90,44 @@ const InstancesList: React.FC<Props> = ({}) => {
               ))}
             </tbody>
           </table>
+          <div className="flex flex-row-reverse">
+            <Pagination>
+              <Pagination.First
+                onClick={() => {
+                  setCurrentPage(1);
+                }}
+              />
+              <Pagination.Prev disabled={currentPage < 2}
+              onClick={() => {
+                setCurrentPage(currentPage-1);
+              }} />
+              <Pagination.Ellipsis />
+              {[-2, -1, 0, 1, 2].map((value, index) => {
+                if (currentPage + value > 0) {
+                  return (
+                    <Pagination.Item
+                      key={index}
+                      active={value === 0}
+                      onClick={() => {
+                        setCurrentPage(currentPage + value);
+                      }}
+                    >
+                      {currentPage + value}
+                    </Pagination.Item>
+                  );
+                }
+              })}
+              <Pagination.Ellipsis />
+              <Pagination.Next onClick={() => {
+                  setCurrentPage(currentPage + 1);
+                }}/>
+              <Pagination.Last onClick={() => {
+                  setCurrentPage(currentPage+1);
+                }}/>
+            </Pagination>
+          </div>
         </div>
       )}
     </div>
   );
 };
-
-export default InstancesList;

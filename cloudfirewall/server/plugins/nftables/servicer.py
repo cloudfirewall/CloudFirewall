@@ -13,7 +13,7 @@ class FirewallServicer(firewall_pb2_grpc.FirewallServicer):
 
     def FetchLatestRules(self, request, context):
         self.logger.info("FetchLatestRules request: %s, peer: %s", request.request_id, context.peer())
-        return FirewallFetchResponse(inbound=Policy.DROP, outbound=Policy.ACCEPT)
+        return FirewallFetchResponse(inbound=Policy.DROP, outbound=Policy.ACCEPT, rules=[])
 
     def SendFirewallStatus(self, request, context):
         self.logger.info("SendFirewallStatus request: %s, peer: %s", request.request_id, context.peer())

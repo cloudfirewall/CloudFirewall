@@ -1,5 +1,6 @@
 import logging
 import os
+import platform
 import time
 import uuid
 
@@ -22,12 +23,18 @@ class HeartbeatService(AgentService):
         # Schedule all periodic tasks
         self.register_task("send_ping", self.send_ping, interval=HEARTBEAT_INTERVAL)
 
+    def get_nodename(self):
+        if platform.system() != 'Windows':
+            return os.uname().nodename
+        else:
+            return platform.uname().node
+
     def send_ping(self):
         ping_time = time.time()
         request_id = str(uuid.uuid4())
         ping_request = PingRequest(
             node_id=self.agent.agent_uuid,
-            node_name=os.uname().nodename,
+            node_name=self.get_nodename(),
         )
 
         ping_response = self.get_response(self.stub.Ping, ping_request)

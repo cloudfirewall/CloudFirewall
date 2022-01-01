@@ -1,41 +1,67 @@
 import { CreateInstanceRequest, EditInstanceRequest } from "../interfaces/Instance";
-import { fetchWrapper } from "../utils/fetch_wrapper"
+import { fetchWrapper } from "../utils/fetch_wrapper";
+import API from '../utils/api';
+import { userService } from "./user.service";
 
 export const instanceService = {
     readInstances,
     readInstanceById,
     createInstances,
-    generateToken,
     editInstanceById,
     deleteInstanceById,
 }
 
-const baseUrl = 'localhost:8080';
+function getAuthHeader() {
+    if (process.browser) {
+        return {
+            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+        }
+
+    }
+}
 
 // to read instance
 function readInstances(name?: string, id?: string, ip?: string, status?: number) {
-    return fetchWrapper.get(`${baseUrl}/instances`);
+
+    return API.get('instances', {
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    })
 }
 
 // to create instance
 function createInstances(token: string, data: CreateInstanceRequest) {
-    return fetchWrapper.post(`${baseUrl}/instances`, data, { token });
+    return API.post('instances', data, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+        }
+    });
 }
 
-// to generate the token
-function generateToken() {
-    return fetchWrapper.get(`${baseUrl}/instances/token`);
-}
 
 // to read instance by id
 function readInstanceById(instanceId: string) {
-    return fetchWrapper.get(`${baseUrl}/${instanceId}`);
+    return API.get(`instances/${instanceId}`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+        }
+    });
 }
 
 function editInstanceById(instanceId: string, data: EditInstanceRequest) {
-    return fetchWrapper.put(`${baseUrl}/instances/${instanceId}`, data);
+    return API.put(`instances/${instanceId}`, data, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+        }
+    });
 }
 
 function deleteInstanceById(instanceId: string) {
-    return fetchWrapper.delete(`${baseUrl}/instances/${instanceId}`);
+    
+    return API.delete(`instances/${instanceId}`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+        }
+    });
 }

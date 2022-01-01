@@ -1,14 +1,19 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, createContext } from "react";
 import { useRouter } from "next/router";
 
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { userService } from "../services/user.service";
+import { AppStore } from "../store";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
+  const AppContext = createContext<AppStore>({
+    username: '',
+    isLoggedIn: false,
+});
 
   useEffect(() => {
     // run auth check on initial load

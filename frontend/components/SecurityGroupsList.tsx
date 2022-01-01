@@ -1,32 +1,63 @@
-import * as React from "react";
+import useSWR from "swr";
 import SearchBarItem from "./SearchBar";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Pagination } from "react-bootstrap";
-import { securityGroups } from '../utils/data';
+import { useState, useEffect } from "react";
+import { securityGroups } from "../utils/data";
+import { securityGroupService } from "../services/security_groups.service";
+import ErrorPage from "./Error";
+import LoadingSpinner from "./LoadingSpinner";
+import BottomPagination from "./BottomPagination";
 
-type Props = {};
-
-
-const SecurityGroupsList: React.FC<Props> = ({}) => {
+const SecurityGroupsList: React.FC = () => {
   const router = useRouter();
-  const [securityGroupList, setSecurityGroupList] =
-    React.useState(securityGroups);
-  const [searchText, setSearchText] = React.useState("");
+  const fetcher = () => securityGroupService.readSecurityGroups();
+  const { data, error } = useSWR("/securityGroups", fetcher);
+  const [securityGroups, setSecurityGroups] = useState([]);
+  const [securityGroupListShown, setSecurityGroupListShown] =
+    useState(securityGroups);
+  useEffect(() => {
+    if (data) {
+      setSecurityGroups(data.data);
+      setSecurityGroupListShown(data.data);
+    }
+  }, [data]);
+  const [searchText, setSearchText] = useState("");
   const handleAddSecurityGroup = () => {
-    router.push("/add_security_group_page");
+    router.push("/security_group/add");
   };
   const handleHelp = () => {
     router.push("/help");
   };
+  const [currentPage, setCurrentPage] = useState(1);
+  const setLastPage = () => {
+    setCurrentPage(securityGroupListShown.length + 1);
+  };
+  const handleSearchTextFilter = (value: string) => {
+    const filteredGroups = securityGroups.filter(
+      (item) => item.name.includes(value) || value.includes(item.name)
+    );
+    setSecurityGroupListShown(filteredGroups);
+  };
+
+  if (error) return <ErrorPage message={error.message} />;
+
+  if (!data) return <LoadingSpinner />;
+
   return (
     <div>
       <div className="flex flex-wrap justify-between items-center justify-items-stretch space-x-2 space-y-2 m-5">
         <div className="">
-          <div className="px-3 py-2 w-max card shadow-md">Total Groups: 5</div>
+          <div className="px-3 py-2 w-max card shadow-md">
+            Total Groups: {securityGroupListShown.length}
+          </div>
         </div>
         <div className=" col-6">
-          <SearchBarItem setSearchText={setSearchText} />
+          <SearchBarItem
+            setSearchText={setSearchText}
+            handleOnChange={handleSearchTextFilter}
+          />
         </div>
         <div className="btn-group">
           <button
@@ -49,20 +80,28 @@ const SecurityGroupsList: React.FC<Props> = ({}) => {
               <th>ID</th>
               <th>Name</th>
               <th>Created On</th>
-              <th>No.of instances</th>
+              <th>Default Inbound Policy </th>
+              <th>Default Outbound Policy </th>
+              <th>No.of Rules</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {securityGroupList.map((securityGroup, index) => (
+            {securityGroupListShown.map((securityGroup, index) => (
               <tr key={index.toString()}>
                 <td>{index + 1}</td>
-                <td>{securityGroup.uuid}</td>
+                <td>
+                  <Link href={`/security_group/${securityGroup.id}`}>
+                    <a className="btn btn-link">{securityGroup.id}</a>
+                  </Link>
+                </td>
                 <td>{securityGroup.name}</td>
                 <td>{securityGroup.creationDate}</td>
-                <td>{securityGroup.uuid}</td>
+                <td>{securityGroup.defaultInboundPolicy}</td>
+                <td>{securityGroup.defaultOutboundPolicy}</td>
+                <td>{securityGroup.rules?.length}</td>
                 <td>
-                  <Link href={`/security_group/${securityGroup.uuid}`}>
+                  <Link href={`/security_group/${securityGroup.id}`}>
                     <a className="btn btn-link">View</a>
                   </Link>
                 </td>
@@ -71,23 +110,11 @@ const SecurityGroupsList: React.FC<Props> = ({}) => {
           </tbody>
         </table>
         <div className="flex flex-row-reverse">
-          <Pagination>
-            <Pagination.First />
-            <Pagination.Prev />
-            <Pagination.Item>{1}</Pagination.Item>
-            <Pagination.Ellipsis />
-
-            <Pagination.Item>{10}</Pagination.Item>
-            <Pagination.Item>{11}</Pagination.Item>
-            <Pagination.Item active>{12}</Pagination.Item>
-            <Pagination.Item>{13}</Pagination.Item>
-            <Pagination.Item disabled>{14}</Pagination.Item>
-
-            <Pagination.Ellipsis />
-            <Pagination.Item>{20}</Pagination.Item>
-            <Pagination.Next />
-            <Pagination.Last />
-          </Pagination>
+          <BottomPagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            setLastPage={setLastPage}
+          />
         </div>
       </div>
     </div>

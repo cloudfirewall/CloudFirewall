@@ -1,15 +1,12 @@
 import * as React from "react";
 
-type Props = {
-  setSearchText: React.Dispatch<React.SetStateAction<string>>
-};
-
-const SearchBarItem: React.FC<Props> = ({setSearchText}) => {
+export default function SearchBarItem({ setSearchText, handleOnChange }) {
   return (
     <form
       className=""
       onSubmit={(e) => {
         e.preventDefault();
+        handleOnChange(e.target['search'].value)
       }}
     >
       <div className="flex flex-row max-h-full space-x-1">
@@ -19,13 +16,11 @@ const SearchBarItem: React.FC<Props> = ({setSearchText}) => {
             name="search"
             id="search"
             className="form-control"
+            onChange={(e)=> handleOnChange(e.target.value)}
           />
         </div>
         <button className="btn btn-primary"> Search</button>
-
       </div>
     </form>
   );
-};
-
-export default SearchBarItem;
+}

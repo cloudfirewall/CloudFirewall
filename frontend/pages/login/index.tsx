@@ -4,11 +4,7 @@ import { userService } from "../../services/user.service";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import * as Yup from "yup";
-
-interface LoginForm {
-  username: string;
-  password: string;
-}
+import API from "../../utils/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,11 +26,10 @@ export default function LoginPage() {
   const { errors } = formState;
 
   const handleOnSubmit = ({ username, password }) => {
-    console.log('at submit')
-    return userService
+    userService
       .login(username, password)
       .then((value) => {
-        router.push('/');
+        router.push("/");
       })
       .catch((error) => {
         setError("apiError", { message: error.toString() });
@@ -49,7 +44,11 @@ export default function LoginPage() {
             <h2 className="ml-3 font-bold"> User Login </h2>
           </div>
 
-          <form onSubmit={handleSubmit(handleOnSubmit, (e)=> console.log('Invalid:', e))}>
+          <form
+            onSubmit={handleSubmit(handleOnSubmit, (e) =>
+              console.log("Invalid:", e)
+            )}
+          >
             <div className="card-body">
               <div className="form-group font-semibold ">
                 <label htmlFor="username"> Username </label>
@@ -60,7 +59,7 @@ export default function LoginPage() {
                   type="text"
                   id="username"
                   name="username"
-                  {...register('username')}
+                  {...register("username")}
                 />
                 <div className="invalid-feedback">
                   {errors.username?.message}
@@ -77,7 +76,7 @@ export default function LoginPage() {
                   id="password"
                   name="password"
                   type="password"
-                  {...register('password')}
+                  {...register("password")}
                 />
                 <div className="invalid-feedback">
                   {errors.password?.message}

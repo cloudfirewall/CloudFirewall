@@ -19,7 +19,7 @@ const InBoundList: React.FC<Props> = ({ rules }) => {
           </tr>
         </thead>
         <tbody>
-          {rules.map((rule, index) => (
+          {rules?.map((rule, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{rule.protocol}</td>

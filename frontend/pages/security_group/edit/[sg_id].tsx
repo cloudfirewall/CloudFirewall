@@ -1,22 +1,22 @@
 import Link from "next/link";
 import * as React from "react";
-import Layout from "../../components/Layout";
-import Overlay from "../../components/Overlay";
-import OverlayContent from "../../components/OverlayContent";
-import { Policy, Protocol, TrafficDirection, FormData } from "../../types";
+import Layout from "../../../components/Layout";
+import Overlay from "../../../components/Overlay";
+import OverlayContent from "../../../components/OverlayContent";
+import { Policy, Protocol, TrafficDirection, FormData } from "../../../types";
 
 type Props = {};
 
 const securityGroup = {
-  name: "string",
-  desc: "string",
+  name: "",
+  desc: "",
   rules: [
     {
       protocol: Protocol.TCP,
       ip: "0.0.0.0/0",
       port: 0,
       policy: Policy.DROP,
-      desc: "string",
+      desc: "",
       trafficDirection: TrafficDirection.INBOUND,
     },
     {
@@ -24,7 +24,7 @@ const securityGroup = {
       ip: "0.0.0.0/0",
       port: 0,
       policy: Policy.DROP,
-      desc: "string",
+      desc: "",
       trafficDirection: TrafficDirection.INBOUND,
     },
   ],
@@ -35,7 +35,7 @@ const initialPolicy = {
   ip: "0.0.0.0/0",
   port: 0,
   policy: Policy.DROP,
-  desc: "string",
+  desc: "",
   trafficDirection: TrafficDirection.INBOUND,
 };
 
@@ -44,10 +44,6 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
 
   const [showOverlay, setShowOverlay] = React.useState<boolean>(false);
 
-  const handleOverlayToggle = (value: boolean) => {
-    setShowOverlay(value);
-  };
-  const hideOverlay = () => setShowOverlay(false);
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };

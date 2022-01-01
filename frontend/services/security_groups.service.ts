@@ -1,7 +1,9 @@
 import { CreateSecurityGroupRequest, EditSecurityGroupRequest } from "../interfaces/SecurityGroup";
-import { fetchWrapper } from "../utils/fetch_wrapper"
+import { Policy } from "../types";
+import API from "../utils/api";
+import { userService } from "./user.service";
 
-export  const securityGroupService = {
+export const securityGroupService = {
     readSecurityGroups,
     readSecurityGroupById,
     createDefaultSecurityGroup,
@@ -10,34 +12,72 @@ export  const securityGroupService = {
     editSecurityGroupById,
     deleteSecurityGroupById,
 
-} 
-
-const baseUrl = 'localhost:8080';
-
-function readSecurityGroups(name: string, id: string ) {
-    return fetchWrapper.get(`${baseUrl}/securityGroups`);
 }
 
-function createSecurityGroup( data: CreateSecurityGroupRequest ) {
-    return fetchWrapper.post(`${baseUrl}/securityGroups`, data);
+function readSecurityGroups(name?: string, id?: string, defaultInboundPolicy?: Policy, defaultOutboundPolicy?: Policy) {
+
+    return API.get(`securityGroups`, {
+        params: {
+            name,
+            id,
+            defaultInboundPolicy,
+            defaultOutboundPolicy,
+        },
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    });
+}
+
+function createSecurityGroup(data: CreateSecurityGroupRequest) {
+    return API.post(`securityGroups`, data, {
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    });
 }
 
 function createDefaultSecurityGroup() {
-    return fetchWrapper.post(`${baseUrl}/securityGroups/default`, {});
+    return API.post(`securityGroups/default`, {}, {
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    });
 }
 
 function readSecurityGroupInstances(securityGroupId: string) {
-    return fetchWrapper.get(`${baseUrl}/securityGroups/instances`);
+    console.log(securityGroupId)
+    return API.get(`securityGroups/instances`, {
+        params: {
+            securityGroupId
+        },
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    });
 }
 
 function readSecurityGroupById(securityGroupId: string) {
-    return fetchWrapper.get(`${baseUrl}/securityGroups/${securityGroupId}`);
+    console.log(securityGroupId);
+    return API.get(`securityGroups/${securityGroupId}`, {
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    });
 }
 
 function editSecurityGroupById(securityGroupId: string, data: EditSecurityGroupRequest) {
-    return fetchWrapper.put(`${baseUrl}/securityGroups/${securityGroupId}`, data);
+    return API.put(`securityGroups/${securityGroupId}`, data, {
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    });
 }
 
 function deleteSecurityGroupById(securityGroupId: string) {
-    return fetchWrapper.delete(`${baseUrl}/securityGroups/${securityGroupId}`);
+    return API.delete(`securityGroups/${securityGroupId}`, {
+        headers: {
+            'Authorization': `Bearer ${userService.token}`
+        }
+    });
 }

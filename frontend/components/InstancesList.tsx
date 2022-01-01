@@ -8,24 +8,36 @@ import { instances } from "../utils/data";
 import { GetStaticProps } from "next";
 import { instanceService } from "../services/instances.service";
 import { Instance } from "../interfaces/Instance";
-
+import { useState, useEffect } from "react";
+import useSWR from "swr";
+import ErrorPage from "./Error";
+import LoadingSpinner from "./LoadingSpinner";
+import BottomPagination from "./BottomPagination";
 
 export default function InstancesList() {
+  const router = useRouter();
+  const fetcher = () => instanceService.readInstances();
+  const { data, error } = useSWR("http://localhost:8000/instances", fetcher);
+  const [instances, setInstances] = useState([]);
+  const [instanceList, setInstanceList] = React.useState(instances);
+  useEffect(() => {
+    console.log(data)
+    setInstances([])
+  }, [data]);
   const [instanceNo, setInstanceNo] = React.useState({
     online: instances.length,
     total: instances.length,
   });
   const [searchText, setSearchText] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [instanceList, setInstanceList] = React.useState(instances);
-  const router = useRouter();
+  const setLastPage = ()=> {setCurrentPage(InstancesList.length + 1 )}
   const handleAddInstance = () => router.push("/add_server_page");
 
   const handleHelp = () => router.push("/help");
-  const getShowableInstances = (page: number) => {
+  const getShowableInstances = (page: number) => {};
 
-
-  }
+  if (error) return <ErrorPage message={error.message}/>
+  if (!data) return <LoadingSpinner/>;
 
   return (
     <div>
@@ -36,7 +48,7 @@ export default function InstancesList() {
           </div>
         </div>
         <div className=" col-6">
-          <SearchBarItem setSearchText={setSearchText} />
+          {/* <SearchBarItem setSearchText={setSearchText} /> */}
         </div>
         <div className="btn-group">
           <button
@@ -91,43 +103,11 @@ export default function InstancesList() {
             </tbody>
           </table>
           <div className="flex flex-row-reverse">
-            <Pagination>
-              <Pagination.First
-                onClick={() => {
-                  setCurrentPage(1);
-                }}
-              />
-              <Pagination.Prev disabled={currentPage < 2}
-              onClick={() => {
-                setCurrentPage(currentPage-1);
-              }} />
-              <Pagination.Ellipsis />
-              {[-2, -1, 0, 1, 2].map((value, index) => {
-                if (currentPage + value > 0) {
-                  return (
-                    <Pagination.Item
-                      key={index}
-                      active={value === 0}
-                      onClick={() => {
-                        setCurrentPage(currentPage + value);
-                      }}
-                    >
-                      {currentPage + value}
-                    </Pagination.Item>
-                  );
-                }
-              })}
-              <Pagination.Ellipsis />
-              <Pagination.Next onClick={() => {
-                  setCurrentPage(currentPage + 1);
-                }}/>
-              <Pagination.Last onClick={() => {
-                  setCurrentPage(currentPage+1);
-                }}/>
-            </Pagination>
+            <BottomPagination currentPage={currentPage} setCurrentPage={setCurrentPage} setLastPage={setLastPage}/>
+
           </div>
         </div>
       )}
     </div>
   );
-};
+}

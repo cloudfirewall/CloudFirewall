@@ -26,6 +26,8 @@ docs/_build/
 # PyInstaller
 build/cloudfirewall
 dist/
+frontend/
+node_modules/
 
 # Annotation files
 annotations.txt

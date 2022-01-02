@@ -12,3 +12,4 @@ ipaddr
 sqlalchemy_utils
 pyjwt
 passlib
+bcrypt

@@ -15,6 +15,8 @@ from cloudfirewall.common.log_util import setup_logging
 from cloudfirewall.common.util import env_to_list
 from cloudfirewall.db import database
 from cloudfirewall.server.server import CloudServer
+from backend.apis import models
+from backend.apis.database import engine
 
 load_dotenv()
 
@@ -77,6 +79,7 @@ async def startup():
     app.connect()
     app.start_grpc_server()
     database.generate_mapping(create_tables=True)
+    models.Base.metadata.create_all(bind=engine)
 
 
 @app.on_event("shutdown")

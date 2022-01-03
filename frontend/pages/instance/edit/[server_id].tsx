@@ -76,7 +76,7 @@ const EditServerPage: React.FC<Props> = ({}) => {
     instanceService
       .deleteInstanceById(server_id as string)
       .then((value) => {
-        console.log(value);
+        // console.log(value);
         router.push("/");
       })
       .catch((error) => {

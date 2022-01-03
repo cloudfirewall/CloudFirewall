@@ -47,7 +47,7 @@ export default function EditSecurityGroupPage() {
   const [sgData, setSgData] =
     React.useState<EditSecurityGroupRequest>(securityGroup);
   React.useEffect(() => {
-    console.log(data?.data[0]);
+    // console.log(data?.data[0]);
     setSgData(data?.data[0]);
   }, [data]);
 
@@ -85,7 +85,7 @@ export default function EditSecurityGroupPage() {
       ...sgData,
       rules: [...inboundRules!, ...outboundRules!],
     });
-    console.log(sgData);
+    // console.log(sgData);
   };
 
   const handleDeleteRule = (index: number, traffic: TrafficDirection) => {
@@ -105,7 +105,7 @@ export default function EditSecurityGroupPage() {
 
   const handleAddRule = (trafficDirection: TrafficDirection) => {
     let rules = [...sgData.rules!, { ...initialPolicy, trafficDirection }];
-    console.log(rules);
+    // console.log(rules);
     setSgData({
       ...sgData,
       rules,
@@ -123,7 +123,7 @@ export default function EditSecurityGroupPage() {
     securityGroupService
       .editSecurityGroupById(sg_id as string, sgData)
       .then((value) => {
-        console.log(value);
+        // console.log(value);
         router.push("/");
       })
       .catch((error) => {
@@ -143,7 +143,7 @@ export default function EditSecurityGroupPage() {
     securityGroupService
       .deleteSecurityGroupById(sg_id as string)
       .then((value) => {
-        console.log(value);
+        // console.log(value);
         router.push("/");
       })
       .catch((error) => {

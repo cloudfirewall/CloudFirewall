@@ -23,7 +23,6 @@ function SecurityGroupInstances({ sg_id }) {
     "/instnace/securityGroup/instances/" + sg_id,
     instancesFetcher
   );
-  console.log(data?.data)
 
   if (error) return <ErrorPage message={error.message} />;
   if (!data) return <LoadingSpinner />;

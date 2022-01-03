@@ -82,7 +82,7 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
       ...sgData,
       rules: [...inboundRules!, ...outboundRules!],
     });
-    console.log(sgData);
+    // console.log(sgData);
   };
 
   const handleDeleteRule = (index: number, traffic: TrafficDirection) => {
@@ -102,7 +102,7 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
 
   const handleAddRule = (trafficDirection: TrafficDirection) => {
     let rules = [...sgData.rules!, { ...initialPolicy, trafficDirection }];
-    console.log(rules);
+    // console.log(rules);
     setSgData({
       ...sgData,
       rules,
@@ -120,7 +120,7 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
     securityGroupService
       .createSecurityGroup(sgData)
       .then((value) => {
-        console.log(value);
+        // console.log(value);
         router.push("/");
       })
       .catch((error) => {

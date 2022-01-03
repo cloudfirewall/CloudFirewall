@@ -10,10 +10,7 @@ type Props = {
 
 const Layout: React.FC<Props> = ({ showBackButton, children }) => {
   const [showOverlay, setShowOverlay] = React.useState(false);
-  const handleLogOut = () => {
-    console.log("here");
-    setShowOverlay(true);
-  };
+
 
   const logOut = () => {
     userService.logout();

@@ -103,8 +103,19 @@ const SecurityGroupDetail: React.FC<Props> = ({}) => {
           </div>
           <div className="flex space-x-2">
             <h5 className="font-medium">Description: </h5>
-            <div className="">{data?.data[0]?.desc}</div>
+            <div className="font-medium">{data?.data[0]?.description}</div>
           </div>
+          <div className="flex flex-row space-x-2">
+            
+            <h5 className="font-medium">Default Inbound Policy: </h5>
+            <div className="font-medium">{data?.data[0]?.defaultInboundPolicy}</div>
+          </div>
+          <div className="flex flex-row space-x-2">
+            
+            <h5 className="font-medium">Default Outbound Policy: </h5>
+            <div className="font-medium">{data?.data[0]?.defaultOutboundPolicy}</div>
+          </div>
+
         </section>
         <section id="rules">
           <div id="button-group" className="flex flex-row justify-center my-4">

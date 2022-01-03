@@ -167,7 +167,7 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
               <select
                 name="policy"
                 id="defaultInboundPolicy"
-                value={sgData.defaultInboundPolicy}
+                value={sgData?.defaultInboundPolicy}
                 onChange={handleChange}
                 className="form-control"
               >
@@ -183,7 +183,7 @@ const AddSecurityGroupPage: React.FC<Props> = ({}) => {
               <select
                 name="policy"
                 id="defaultOutboundPolicy"
-                value={sgData.defaultOutboundPolicy}
+                value={sgData?.defaultOutboundPolicy}
                 onChange={handleChange}
                 className="form-control"
               >

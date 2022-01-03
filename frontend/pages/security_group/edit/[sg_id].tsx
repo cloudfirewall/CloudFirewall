@@ -7,14 +7,16 @@ import useSWR from "swr";
 import ErrorPage from "../../../components/Error";
 import Layout from "../../../components/Layout";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import { EditSecurityGroupRequest } from "../../../interfaces/SecurityGroup";
 import { securityGroupService } from "../../../services/security_groups.service";
 import { Policy, Protocol, TrafficDirection, FormData } from "../../../types";
 
-type Props = {};
 
 const securityGroup = {
   name: "",
   description: "",
+  defaultInboundPolicy: Policy.DROP,
+  defaultOutboundPolicy: Policy.DROP,
   rules: [
     {
       protocol: Protocol.TCP,
@@ -32,7 +34,7 @@ const initialPolicy = {
   ip: "0.0.0.0/0",
   port: 0,
   policy: Policy.DROP,
-  desc: "",
+  description: "",
   trafficDirection: TrafficDirection.INBOUND,
 };
 
@@ -42,7 +44,8 @@ export default function EditSecurityGroupPage() {
   const fetcher = () =>
     securityGroupService.readSecurityGroupById(sg_id as string);
   const { data, error } = useSWR("/random1/security_group/" + sg_id, fetcher);
-  const [sgData, setSgData] = React.useState<FormData>(securityGroup);
+  const [sgData, setSgData] =
+    React.useState<EditSecurityGroupRequest>(securityGroup);
   React.useEffect(() => {
     console.log(data?.data[0]);
     setSgData(data?.data[0]);
@@ -193,6 +196,38 @@ export default function EditSecurityGroupPage() {
                     className="form-control w-80"
                   />
                 </div>
+                <div className="  flex flex-row space-x-4 items-center form-group container">
+                  <label className="w-32 font-semibold" htmlFor="description">
+                    Default Inbound Policy:
+                  </label>
+                  <select
+                    name="policy"
+                    id="defaultInboundPolicy"
+                    value={sgData?.defaultInboundPolicy}
+                    onChange={handleChange}
+                    className="form-control"
+                  >
+                    <option value={Policy.ACCEPT}>ACCEPT</option>
+                    {/* <option value={Policy.REJECT}>REJECT</option> */}
+                    <option value={Policy.DROP}>DROP</option>
+                  </select>
+                </div>
+                <div className="  flex flex-row space-x-4 items-center form-group container">
+                  <label className="w-32 font-semibold" htmlFor="description">
+                    Default Outbound Policy:
+                  </label>
+                  <select
+                    name="policy"
+                    id="defaultOutboundPolicy"
+                    value={sgData?.defaultOutboundPolicy}
+                    onChange={handleChange}
+                    className="form-control"
+                  >
+                    <option value={Policy.ACCEPT}>ACCEPT</option>
+                    {/* <option value={Policy.REJECT}>REJECT</option> */}
+                    <option value={Policy.DROP}>DROP</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div className="col-4">
@@ -236,7 +271,13 @@ export default function EditSecurityGroupPage() {
                                 name="protocol"
                                 id="protocol"
                                 value={rule.protocol}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                                 className="form-control"
                               >
                                 <option value={Protocol.TCP}>TCP</option>
@@ -251,7 +292,13 @@ export default function EditSecurityGroupPage() {
                                 id="ip"
                                 value={rule.ip}
                                 className="form-control"
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                               />
                             </td>
                             <td>
@@ -261,7 +308,13 @@ export default function EditSecurityGroupPage() {
                                 className="form-control"
                                 id="port"
                                 value={rule.port}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                               />
                             </td>
                             <td>
@@ -269,7 +322,13 @@ export default function EditSecurityGroupPage() {
                                 name="policy"
                                 id="policy"
                                 value={rule.policy}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                                 className="form-control"
                               >
                                 <option value={Policy.ACCEPT}>ACCEPT</option>
@@ -283,7 +342,13 @@ export default function EditSecurityGroupPage() {
                                 name=""
                                 id="description"
                                 value={rule.description}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                                 cols={30}
                                 rows={1}
                               />
@@ -348,7 +413,13 @@ export default function EditSecurityGroupPage() {
                                 name="protocol"
                                 id="protocol"
                                 value={rule.protocol}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                                 className="form-control"
                               >
                                 <option value={Protocol.TCP}>TCP</option>
@@ -362,7 +433,13 @@ export default function EditSecurityGroupPage() {
                                 type="text"
                                 id="ip"
                                 value={rule.ip}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                               />
                             </td>
                             <td>
@@ -371,7 +448,13 @@ export default function EditSecurityGroupPage() {
                                 name="port"
                                 id="port"
                                 value={rule.port}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                               />
                             </td>
                             <td>
@@ -379,7 +462,13 @@ export default function EditSecurityGroupPage() {
                                 name="policy"
                                 id="policy"
                                 value={rule.policy}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                                 className="form-control"
                               >
                                 <option value={Policy.ACCEPT}>ACCEPT</option>
@@ -393,7 +482,13 @@ export default function EditSecurityGroupPage() {
                                 name=""
                                 id="description"
                                 value={rule.description}
-                                onChange={(e) => handleRuleChange(e, index, rule.trafficDirection)}
+                                onChange={(e) =>
+                                  handleRuleChange(
+                                    e,
+                                    index,
+                                    rule.trafficDirection
+                                  )
+                                }
                                 cols={30}
                                 rows={1}
                               />

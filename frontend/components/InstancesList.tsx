@@ -17,27 +17,41 @@ import BottomPagination from "./BottomPagination";
 export default function InstancesList() {
   const router = useRouter();
   const fetcher = () => instanceService.readInstances();
-  const { data, error } = useSWR("http://localhost:8000/instances", fetcher);
+  const { data, error } = useSWR("/instances", fetcher);
   const [instances, setInstances] = useState([]);
-  const [instanceList, setInstanceList] = React.useState(instances);
-  useEffect(() => {
-    console.log(data)
-    setInstances([])
-  }, [data]);
+  const [instanceListShown, setInstanceListShown] = React.useState(instances);
   const [instanceNo, setInstanceNo] = React.useState({
-    online: instances.length,
-    total: instances.length,
+    online: instances?.length,
+    total: instances?.length,
   });
+  useEffect(() => {
+    if (data) {
+      setInstances(data.data);
+      setInstanceListShown(data.data);
+      setInstanceNo({
+        online: instances?.length,
+        total: instances?.length,
+      });
+    }
+  }, [data]);
   const [searchText, setSearchText] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
-  const setLastPage = ()=> {setCurrentPage(InstancesList.length + 1 )}
-  const handleAddInstance = () => router.push("/add_server_page");
+  const setLastPage = () => {
+    setCurrentPage(InstancesList.length + 1);
+  };
+  const handleAddInstance = () => router.push("/instance/add");
 
   const handleHelp = () => router.push("/help");
   const getShowableInstances = (page: number) => {};
+  const handleSearchTextFilter = (value: string) => {
+    const filteredGroups = instances.filter(
+      (item) => item.name.includes(value) || value.includes(item.name)
+    );
+    setInstanceListShown(filteredGroups);
+  };
 
-  if (error) return <ErrorPage message={error.message}/>
-  if (!data) return <LoadingSpinner/>;
+  if (error) return <ErrorPage message={error.message} />;
+  if (!data) return <LoadingSpinner />;
 
   return (
     <div>
@@ -48,7 +62,9 @@ export default function InstancesList() {
           </div>
         </div>
         <div className=" col-6">
-          {/* <SearchBarItem setSearchText={setSearchText} /> */}
+          <SearchBarItem setSearchText={setSearchText}
+            handleOnChange={handleSearchTextFilter}
+            />
         </div>
         <div className="btn-group">
           <button
@@ -62,7 +78,7 @@ export default function InstancesList() {
           </button>
         </div>
       </div>
-      {instanceList?.length === 0 ? (
+      {instanceListShown?.length === 0 ? (
         <EmptyInstancePage />
       ) : (
         <div className="px-5 shadow-md">
@@ -76,25 +92,33 @@ export default function InstancesList() {
                 <th>Security Group</th>
                 <th>Connected on</th>
                 <th>Status</th>
+                <th>Description</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {instanceList?.map((instance, index) => (
+              {instanceListShown?.map((instance, index) => (
                 <tr key={index.toString()}>
                   <td>{index + 1}</td>
                   <td>
-                    <Link href={`/server/${instance.uuid}`}>
-                      <a className="btn btn-link">{instance.uuid}</a>
+                    <Link href={`/instance/${instance.id}`}>
+                      <a className="btn btn-link">{instance.id}</a>
                     </Link>
                   </td>
                   <td>{instance.name}</td>
                   <td>{instance.ip}</td>
-                  <td>{instance.securityGroup.uuid}</td>
-                  <td>{instance.creationDate}</td>
-                  <td>{instance.onlineInfo !== null ? "true" : "false"} </td>
                   <td>
-                    <Link href={`/server/${instance.uuid}`}>
+                    <Link
+                      href={`security_group/${instance?.securityGroup?.id}`}
+                    >
+                      {instance.securityGroup.name}
+                    </Link>
+                  </td>
+                  <td>{instance.creationDate}</td>
+                  <td>{instance.status? "Live" : "Stopped"} </td>
+                  <td>{instance.description}</td>
+                  <td>
+                    <Link href={`/instance/${instance.id}`}>
                       <a className="btn btn-link">View</a>
                     </Link>
                   </td>
@@ -103,8 +127,11 @@ export default function InstancesList() {
             </tbody>
           </table>
           <div className="flex flex-row-reverse">
-            <BottomPagination currentPage={currentPage} setCurrentPage={setCurrentPage} setLastPage={setLastPage}/>
-
+            <BottomPagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              setLastPage={setLastPage}
+            />
           </div>
         </div>
       )}

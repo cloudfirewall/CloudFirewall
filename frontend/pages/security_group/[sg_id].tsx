@@ -20,9 +20,10 @@ function SecurityGroupInstances({ sg_id }) {
   const instancesFetcher = () =>
     securityGroupService.readSecurityGroupInstances(sg_id as string);
   const { data, error } = useSWR(
-    "/securityGroup/instances/" + sg_id,
+    "/instnace/securityGroup/instances/" + sg_id,
     instancesFetcher
   );
+  console.log(data?.data)
 
   if (error) return <ErrorPage message={error.message} />;
   if (!data) return <LoadingSpinner />;
@@ -37,21 +38,30 @@ function SecurityGroupInstances({ sg_id }) {
             <tr>
               <th>SN</th>
               <th>Instance ID</th>
+              <th>Name</th>
               <th>IP Address</th>
-              <th>Security Group</th>
-              <th>Connected on</th>
-              <th>Status</th>
+              <th>Description</th>
             </tr>
           </thead>
           <tbody>
-            {data?.data?.map((instance, index) => (
+            {data?.data?.length === 0 && (
               <tr>
+                <td colSpan={6}>
+                  {" "}
+                  <span className="flex justify-center">
+                    No Instances
+                  </span>{" "}
+                </td>
+              </tr>
+            )}
+            {data?.data?.map((instance, index) => (
+              <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{instance.uuid}</td>
-                <td>{instance.ip}</td>
-                <td>{instance.data?.data?.uuid}</td>
-                <td>{instance.creationDate}</td>
-                <td>{instance.onlineInfo !== null ? "true" : "false"} </td>
+                <td><Link href={`/instance/${instance?.id}`}>{instance?.id}</Link></td>
+                <td>{instance?.name}</td>
+
+                <td>{instance?.ip}</td>
+                <td>{instance?.description}</td>
               </tr>
             ))}
           </tbody>
@@ -68,7 +78,6 @@ const SecurityGroupDetail: React.FC<Props> = ({}) => {
     securityGroupService.readSecurityGroupById(sg_id as string);
   const { data, error } = useSWR("/securityGroup/" + sg_id, fetcher);
 
-
   const [selectedTab, setSelectedTab] = React.useState<Tabs>(Tabs.INBOUND);
 
   if (error) return <ErrorPage message={error.message} />;
@@ -79,9 +88,12 @@ const SecurityGroupDetail: React.FC<Props> = ({}) => {
       <div className="container mt-3">
         <section id="description">
           <div className="flex flex-row justify-between py-2">
-            <h3 className="font-medium"> Security Group Name : {data?.data[0]?.name}</h3>
+            <h3 className="font-medium">
+              {" "}
+              Security Group Name : {data?.data[0]?.name}
+            </h3>
             <div className="btn-group">
-              <Link href="/edit_security_group">
+              <Link href={"/security_group/edit/" + sg_id}>
                 <a className="btn btn-secondary w-32">Edit Settings</a>
               </Link>
               <Link href="/help">
@@ -140,7 +152,7 @@ const SecurityGroupDetail: React.FC<Props> = ({}) => {
             />
           )}
         </section>
-        <SecurityGroupInstances sg_id={sg_id}/>
+        <SecurityGroupInstances sg_id={sg_id} />
       </div>
     </Layout>
   );

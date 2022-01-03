@@ -1,15 +1,9 @@
-import { useEffect, useState } from "react";
 import { Nav, Tab } from "react-bootstrap";
 import Layout from "../components/Layout_";
 import SecurityGroupsList from "../components/SecurityGroupsList";
 import InstancesList from "../components/InstancesList";
-import { instanceService } from "../services/instances.service";
-import { securityGroupService } from "../services/security_groups.service";
 
 export default function HomePage({ selectedTab = "instances" }) {
-
-
-
   return (
     <Layout>
       <div className="my-10"></div>
@@ -28,7 +22,7 @@ export default function HomePage({ selectedTab = "instances" }) {
         </Nav>
         <Tab.Content>
           <Tab.Pane eventKey="instances">
-            <InstancesList/>
+            <InstancesList />
           </Tab.Pane>
           <Tab.Pane eventKey="security">
             <SecurityGroupsList />
@@ -38,8 +32,3 @@ export default function HomePage({ selectedTab = "instances" }) {
     </Layout>
   );
 }
-
-// export async function getStaticProps() {
-//   let data = await instanceService.readInstances()
-//   return { props: {data} }
-// }

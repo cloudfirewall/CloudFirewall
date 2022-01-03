@@ -11,15 +11,6 @@ export const instanceService = {
     deleteInstanceById,
 }
 
-function getAuthHeader() {
-    if (process.browser) {
-        return {
-            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
-        }
-
-    }
-}
-
 // to read instance
 function readInstances(name?: string, id?: string, ip?: string, status?: number) {
 
@@ -34,7 +25,7 @@ function readInstances(name?: string, id?: string, ip?: string, status?: number)
 function createInstances(token: string, data: CreateInstanceRequest) {
     return API.post('instances', data, {
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+            'Authorization': `Bearer ${userService.token}`
         }
     });
 }
@@ -44,7 +35,7 @@ function createInstances(token: string, data: CreateInstanceRequest) {
 function readInstanceById(instanceId: string) {
     return API.get(`instances/${instanceId}`, {
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+            'Authorization': `Bearer ${userService.token}`
         }
     });
 }
@@ -52,16 +43,16 @@ function readInstanceById(instanceId: string) {
 function editInstanceById(instanceId: string, data: EditInstanceRequest) {
     return API.put(`instances/${instanceId}`, data, {
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+            'Authorization': `Bearer ${userService.token}`
         }
     });
 }
 
 function deleteInstanceById(instanceId: string) {
-    
+
     return API.delete(`instances/${instanceId}`, {
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('user') || ''}`
+            'Authorization': `Bearer ${userService.token}`
         }
     });
 }

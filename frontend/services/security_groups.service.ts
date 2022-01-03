@@ -46,7 +46,6 @@ function createDefaultSecurityGroup() {
 }
 
 function readSecurityGroupInstances(securityGroupId: string) {
-    console.log(securityGroupId)
     return API.get(`securityGroups/instances`, {
         params: {
             securityGroupId
@@ -58,7 +57,6 @@ function readSecurityGroupInstances(securityGroupId: string) {
 }
 
 function readSecurityGroupById(securityGroupId: string) {
-    console.log(securityGroupId);
     return API.get(`securityGroups/${securityGroupId}`, {
         headers: {
             'Authorization': `Bearer ${userService.token}`

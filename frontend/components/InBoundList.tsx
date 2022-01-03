@@ -19,6 +19,13 @@ const InBoundList: React.FC<Props> = ({ rules }) => {
           </tr>
         </thead>
         <tbody>
+          {rules?.length === 0 && (
+            <tr className="m-3">
+              <td colSpan={6} align="center">
+                <span className="ml-5 p-2">Empty Rules</span>
+              </td>
+            </tr>
+          )}
           {rules?.map((rule, index) => (
             <tr key={index}>
               <td>{index + 1}</td>

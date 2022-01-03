@@ -1,13 +1,14 @@
 import * as React from "react";
+import { Table } from "react-bootstrap";
 
 type Props = {
-    rules: any [],
+  rules: any[];
 };
 
-const OutBoundList: React.FC<Props> = ({rules}) => {
+const OutBoundList: React.FC<Props> = ({ rules }) => {
   return (
     <div className="shadow-md">
-      <table className="table table-striped">
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>SN</th>
@@ -16,10 +17,16 @@ const OutBoundList: React.FC<Props> = ({rules}) => {
             <th>Port no.</th>
             <th>Policy</th>
             <th>Description</th>
-        
           </tr>
         </thead>
         <tbody>
+          {rules?.length === 0 && (
+            <tr>
+              <td colSpan={6} align="center">
+                <span className="ml-5 p-2">Empty Rules</span>
+              </td>
+            </tr>
+          )}
           {rules?.map((rule, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
@@ -31,7 +38,7 @@ const OutBoundList: React.FC<Props> = ({rules}) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };

@@ -21,13 +21,13 @@ export enum Tabs {
   
   export interface FormData {
     name: string;
-    desc: string;
+    description: string;
     rules?: {
       protocol: Protocol;
       ip: string;
       port: number;
       policy: Policy;
-      desc?: string;
+      description?: string;
       trafficDirection: TrafficDirection;
     }[];
   }
